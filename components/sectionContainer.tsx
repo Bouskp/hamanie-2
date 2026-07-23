@@ -1,7 +1,7 @@
-import { categories } from '../app/rubrique/[slug]/page'
 import { notFound } from 'next/navigation'
 import { getRecentPosts } from '@/lib/wordpress'
 import { searchTerms } from '@/lib/metada'
+import { categories } from '@/lib/utils'
 
 interface SectionContainerProps {
   sectionTitle?: string
