@@ -10,7 +10,6 @@ import Link from 'next/link'
 import { Badge } from '@/components/ui/badge'
 import { CalendarDays, User, Folder, Tag } from 'lucide-react'
 import { formatHtml } from '@/lib/utils'
-import { postcss } from '@tailwindcss/postcss'
 
 export async function generateStaticParams() {
   return await getAllPostSlugs()
