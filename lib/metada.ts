@@ -1,4 +1,5 @@
 import { siteConfig } from '@/site.config'
+import { link } from 'fs'
 import type { Metadata } from 'next'
 
 interface ContentMetadataOptions {
@@ -54,3 +55,16 @@ export function truncateHtml(html: string, maxWords: number): string {
   if (words.length <= maxWords) return text
   return words.slice(0, maxWords).join(' ') + '...'
 }
+
+export interface SearchTerms {
+  term: string
+  desc: string
+}
+
+export const searchTerms: SearchTerms[] = [
+  { term: 'football', desc: 'Football' },
+  // { term: "côted'ivoire", desc: '/cote-divoire' },
+  { term: 'senegal', desc: 'Sénégal' },
+  { term: 'benin', desc: 'Bénin' },
+  { term: 'burkina', desc: 'Burkina Faso' },
+]

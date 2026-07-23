@@ -209,7 +209,7 @@ export async function getRecentPosts(filterParams?: {
 }): Promise<Post[]> {
   const query: Record<string, any> = {
     _embed: true,
-    per_page: 6,
+    per_page: 8,
   }
 
   if (filterParams?.search) query.search = filterParams.search

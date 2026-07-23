@@ -1,7 +1,7 @@
 import { getMagazinePaginated, getAllMagazineSlugs } from '@/lib/wordpress'
 import Link from 'next/link'
 import Image from 'next/image'
-import LoadMore from '../components/LoadMore'
+import LoadMore from '../../components/LoadMore'
 
 export const revalidate = 3600
 
