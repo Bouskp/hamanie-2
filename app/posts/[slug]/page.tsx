@@ -3,6 +3,7 @@ import {
   getAllPostSlugs,
   getTagsByPost,
   getCategoryById,
+  getCategoriesByPost,
 } from '@/lib/wordpress'
 import { notFound } from 'next/navigation'
 import Image from 'next/image'
@@ -24,10 +25,7 @@ export default async function PostPage({
 
   const post = await getPostBySlug(slug)
   const tags = await getTagsByPost(post?.id || 0)
-  const categories =
-    post?.categories.map(function (cat, index) {
-      getCategoryById(cat).then((res) => res)
-    }) || []
+  const categories = await getCategoriesByPost(post?.id || 0)
 
   if (!post) {
     notFound()
@@ -95,7 +93,7 @@ export default async function PostPage({
                 {categories.map((cat: any) => (
                   <Link
                     key={cat.id}
-                    href={`/rublique/${cat.slug}`}
+                    href={`/rubrique/${cat.slug}`}
                     className='text-sm font-medium text-muted-foreground hover:text-orange-600 transition-colors py-1 block border-b border-dashed last:border-0'
                   >
                     {cat.name}
@@ -119,7 +117,7 @@ export default async function PostPage({
                     variant='outline'
                     className='rounded-xl px-3 py-1 bg-background text-xs hover:border-orange-600 hover:text-orange-600 transition-colors'
                   >
-                    <Link href={`/tags/${tag.slug}`}>#{tag.name}</Link>
+                    <span>#{tag.name}</span>
                   </Badge>
                 ))}
               </div>

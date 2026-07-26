@@ -15,7 +15,6 @@ import type {
 
 // Single source of truth for WordPress configuration
 const baseUrl = process.env.WORDPRESS_URL
-console.log('WordPress API base URL:', baseUrl)
 const isConfigured = Boolean(baseUrl)
 
 if (!isConfigured) {
@@ -253,6 +252,12 @@ export async function getCategoryBySlug(slug: string): Promise<Category> {
   return wordpressFetch<Category[]>('/wp-json/wp/v2/categories', { slug }).then(
     (categories) => categories[0],
   )
+}
+
+export async function getCategoriesByPost(postId: number): Promise<Category[]> {
+  return wordpressFetch<Category[]>('/wp-json/wp/v2/categories', {
+    post: postId,
+  })
 }
 
 export async function getPostsByCategory(categoryId: number): Promise<Post[]> {
@@ -509,9 +514,10 @@ export async function getMagazineById(id: number): Promise<Magazine> {
 export async function getMagazinePaginated(
   page: number = 1,
   perPage: number = 9,
+  magtype: string = 'h_magazine',
 ): Promise<WordPressResponse<Magazine[]>> {
   return wordpressFetchPaginatedGraceful<Magazine>(
-    '/wp-json/wp/v2/h_magazine',
+    `/wp-json/wp/v2/${magtype}`,
     {
       _embed: true,
       per_page: perPage,

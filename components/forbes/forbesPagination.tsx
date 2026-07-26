@@ -8,6 +8,11 @@ interface PaginationProps {
   categorySlug: string
 }
 
+const createPaginationUrl = (newPage: number, slug: string) => {
+  const params = new URLSearchParams()
+  if (newPage > 1) params.set('page', newPage.toString())
+  return `/rubrique/${slug}${params.toString() ? `?${params.toString()}` : ''}`
+}
 export function ForbesPagination({
   currentPage,
   totalPages,
@@ -25,7 +30,7 @@ export function ForbesPagination({
         asChild={currentPage > 1}
       >
         {currentPage > 1 ? (
-          <Link href={`/rubrique/${categorySlug}?page=${currentPage - 1}`}>
+          <Link href={createPaginationUrl(currentPage - 1, categorySlug)}>
             <ChevronLeft className='h-4 w-4 mr-1' /> Précédent
           </Link>
         ) : (
@@ -48,7 +53,7 @@ export function ForbesPagination({
         asChild={currentPage < totalPages}
       >
         {currentPage < totalPages ? (
-          <Link href={`/rubrique/${categorySlug}?page=${currentPage + 1}`}>
+          <Link href={createPaginationUrl(currentPage + 1, categorySlug)}>
             Suivant <ChevronRight className='h-4 w-4 ml-1' />
           </Link>
         ) : (

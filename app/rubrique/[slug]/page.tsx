@@ -1,10 +1,8 @@
 import { ForbesGrid } from '@/components/forbes/forbesGrid'
 import { ForbesHero } from '@/components/forbes/forbesHero'
 import { ForbesPagination } from '@/components/forbes/forbesPagination'
-import { PostGrid } from '@/components/PostGrid'
 import { categories } from '@/lib/utils'
 import { getPostsByCategoryPaginated } from '@/lib/wordpress'
-import Link from 'next/link'
 import { notFound } from 'next/navigation'
 
 interface Props {
@@ -16,22 +14,16 @@ interface Props {
   }>
 }
 
-// Create pagination URL helper
-const createPaginationUrl = (newPage: number, slug: string) => {
-  const params = new URLSearchParams()
-  if (newPage > 1) params.set('page', newPage.toString())
-  return `/rubrique/${slug}${params.toString() ? `?${params.toString()}` : ''}`
-}
-
 export default async function Page({ params, searchParams }: Props) {
   const { slug } = await params
   const category = categories.find((category) => category.slug === slug)
   const { page } = await searchParams
+  console.log(page, category)
 
   const currentPage = page ? parseInt(page) : 1
   const isFirstPage = currentPage === 1
 
-  if (!category) notFound()
+  if (!category) <p>{"La category n'existe pas"}</p>
 
   const dataResponse = await getPostsByCategoryPaginated(
     category?.id || 0,
@@ -49,7 +41,7 @@ export default async function Page({ params, searchParams }: Props) {
       {/* En-tête Institutionnel style Forbes */}
       <div className='text-center py-6 border-b-4 border-black mb-6'>
         <h1 className='text-4xl md:text-6xl font-serif font-black uppercase tracking-tight text-foreground'>
-          {category.title}
+          {category?.title}
         </h1>
       </div>
 
