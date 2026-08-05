@@ -29,8 +29,9 @@ export async function CategoryPostCard({ post }: { post: RecentPost }) {
             src={image.guid.rendered}
             alt={post.title}
             fill
-            sizes='(max-width: 768px) 100vw, 350px'
-            className='object-cover transition-transform duration-500 group-hover:scale-103'
+            sizes='(max-w-768px) 100vw, 33vw'
+            className='object-cover object-top
+            group-hover:scale-102 transition-transform duration-300'
             loading='lazy'
           />
         </div>

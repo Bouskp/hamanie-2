@@ -24,7 +24,7 @@ export function HeroSection({ post }: { post: Post }) {
                 <Badge
                   key={idx}
                   variant='secondary'
-                  className='text-xs md:text-sm font-medium mr-2'
+                  className='text-xs md:text-sm font-medium mr-2 capitalize'
                 >
                   {cat}
                 </Badge>
@@ -32,18 +32,18 @@ export function HeroSection({ post }: { post: Post }) {
             ) : (
               <Badge
                 variant='secondary'
-                className='text-xs md:text-sm font-medium'
+                className='text-xs md:text-sm font-medium capitalize'
               >
                 {post.category}
               </Badge>
             )}
           </div>
           <h1
-            className='text-3xl md:text-4xl lg:text-5xl font-extrabold tracking-tight leading-tight text-foreground'
+            className='text-2xl md:text-2xl lg:text-3xl font-extrabold tracking-tight leading-tight text-foreground font-condensed'
             dangerouslySetInnerHTML={{ __html: post.title }}
           />
           <p
-            className='text-muted-foreground text-sm md:text-base max-w-xl line-clamp-3 leading-relaxed'
+            className='text-muted-foreground text-sm md:text-base max-w-xl  leading-relaxed font-condensed'
             dangerouslySetInnerHTML={{ __html: post.excerpt }}
           />
           <div className='flex items-center gap-2 text-xs md:text-sm text-muted-foreground'>

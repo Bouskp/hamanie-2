@@ -75,7 +75,6 @@ export function MagGrid({ archives }: { archives: Mag[] }) {
       </h3>
       <div className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8'>
         {affiches.map((mag, index) => {
-          console.log(mag.link)
           return (
             <article
               key={index}

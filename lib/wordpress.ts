@@ -196,6 +196,49 @@ export async function getPostsPaginated(
   )
 }
 
+export async function getPostsPaginatedBySearch(
+  page: number = 1,
+  perPage: number = 9,
+  filterParams?: {
+    author?: string
+    tag?: string
+    category?: string
+    search?: string
+  },
+): Promise<WordPressResponse<Post[]>> {
+  const query: Record<string, any> = {
+    _embed: 'self',
+    per_page: perPage,
+    page,
+  }
+
+  // Build cache tags based on filters
+  const cacheTags = ['wordpress', 'posts']
+
+  if (filterParams?.search) {
+    query.search = filterParams.search
+    cacheTags.push('posts-search')
+  }
+  if (filterParams?.author) {
+    query.author = filterParams.author
+    cacheTags.push(`posts-author-${filterParams.author}`)
+  }
+  if (filterParams?.tag) {
+    query.tags = filterParams.tag
+    cacheTags.push(`posts-tag-${filterParams.tag}`)
+  }
+  if (filterParams?.category) {
+    query.categories = filterParams.category
+    cacheTags.push(`posts-category-${filterParams.category}`)
+  }
+
+  return wordpressFetchPaginatedGraceful<Post>(
+    '/wp-json/wp/v2/search',
+    query,
+    cacheTags,
+  )
+}
+
 /**
  * Fetches recent posts (up to 100). For paginated access use getPostsPaginated().
  * For fetching ALL posts (e.g., sitemap), use getAllPostsForSitemap().
@@ -360,7 +403,8 @@ export async function getPostsByTagSlug(tagSlug: string): Promise<Post[]> {
 }
 
 export async function getFeaturedMediaById(id: number): Promise<FeaturedMedia> {
-  return wordpressFetch<FeaturedMedia>(`/wp-json/wp/v2/media/${id}`)
+  let newId = id == 0 ? 15198 : id
+  return wordpressFetch<FeaturedMedia>(`/wp-json/wp/v2/media/${newId}`)
 }
 
 export async function searchCategories(query: string): Promise<Category[]> {
@@ -453,7 +497,7 @@ export async function getPostsByCategoryPaginated(
   page: number = 1,
   perPage: number = 9,
 ): Promise<WordPressResponse<Post[]>> {
-  return wordpressFetchPaginatedGraceful<Post>('/wp-json/wp/v2/posts?', {
+  return wordpressFetchPaginatedGraceful<Post>('/wp-json/wp/v2/posts', {
     _embed: true,
     per_page: perPage,
     page,
@@ -488,8 +532,10 @@ export async function getPostsByAuthorPaginated(
 }
 
 // Magazine functions (custom post type)
-export async function getRecentMagazines(): Promise<Magazine[]> {
-  return wordpressFetchGraceful<Magazine[]>('/wp-json/wp/v2/h_magazine', [], {
+export async function getRecentMagazines(
+  magtype: string = 'h_magazine',
+): Promise<Magazine[]> {
+  return wordpressFetchGraceful<Magazine[]>(`/wp-json/wp/v2/${magtype}`, [], {
     _embed: true,
     per_page: 20,
     tags: ['magazines'],
@@ -498,6 +544,7 @@ export async function getRecentMagazines(): Promise<Magazine[]> {
 
 export async function getMagazineBySlug(
   slug: string,
+  magType: string = 'h_magazine',
 ): Promise<Magazine | undefined> {
   const magazines = await wordpressFetchGraceful<Magazine[]>(
     '/wp-json/wp/v2/h_magazine',
@@ -507,8 +554,11 @@ export async function getMagazineBySlug(
   return magazines[0]
 }
 
-export async function getMagazineById(id: number): Promise<Magazine> {
-  return wordpressFetch<Magazine>(`/wp-json/wp/v2/h_magazine/${id}`)
+export async function getMagazineById(
+  id: number,
+  magType: string = 'h_magazine',
+): Promise<Magazine> {
+  return wordpressFetch<Magazine>(`/wp-json/wp/v2/${magType}/${id}`)
 }
 
 export async function getMagazinePaginated(

@@ -1,87 +1,90 @@
-import { HeroSection } from '@/components/home/heroSection'
-import { RecentPosts } from '@/components/home/recentPosts'
-import { PopularPosts } from '@/components/home/popularPosts'
-import { NewsletterForm } from '@/components/home/newsletterForm'
-import { CategorySection } from '@/components/home/CategorySection'
-import { Rss } from 'lucide-react'
-import { getPostsPaginated } from '@/lib/wordpress'
+import SectionRouter from '@/components/sections/SectionRouter'
+import HeroSlider from '@/components/home/HeroSlider'
+import HeroMagazine from '@/components/magazines/HeroMagazine'
+import {
+  getFeaturedMediaById,
+  getMagazinePaginated,
+  getPostsPaginated,
+} from '@/lib/wordpress'
 import { categories } from '@/lib/utils'
+import YoutubeSectionAccueil from '@/components/YoutubeSectionAccueil'
 
-export const revalidate = 3600 // Revalidation every 60 seconds
+export const revalidate = 3600
 
-// Simulation de fetch API WordPress
+// =========================================================================
+// 2. LE COMPOSANT DE LA PAGE PRINCIPALE
+// =========================================================================
 export default async function HomePage() {
-  const data = await getPostsPaginated(1, 16)
-  const posts = data.data.map((post: any) => ({
-    id: post.id,
-    title: post.title.rendered,
-    slug: post.slug,
-    date: post.date,
-    image: post._embedded['wp:featuredmedia'].at(0)?.source_url,
-    excerpt: post.excerpt.rendered,
-    categories: post.categories.map(async (catId: number) => {
-      const category = categories.find((cat) => cat.id === catId)
-      return category ? category.slug : 'Inconnu'
-    }),
-  }))
+  // Récupération de tous les flux WordPress en parallèle pour des performances maximales
+  const response = await getPostsPaginated(1, 3)
+  const { data: recentPost } = response
 
+  const responseMag = await getMagazinePaginated(1, 1)
+  const latestMagazine = responseMag.data[0]
+
+  // On isole les 3 premiers articles globaux de la politique pour le HeroSlider tout en haut
+  const sliderPosts = recentPost.slice(0, 3).map((post, idx) => {
+    const featuredImage =
+      post._embedded?.['wp:featuredmedia']?.[0].source_url ||
+      (post.featured_media > 0
+        ? getFeaturedMediaById(post.featured_media).then(
+            (data) => data.source_url,
+          )
+        : ''
+      ).toString()
+    return {
+      ...post,
+      title: post.title.rendered,
+      excerpt: post.excerpt.rendered,
+      id: idx.toString(),
+      category: post.categories,
+      featuredImage: featuredImage,
+    }
+  })
+
+  console.log(categories.slice(9, 12))
   return (
-    <>
-      <div className='space-y-16 md:space-y-24 pb-20'>
-        {/* 1. Hero unique */}
-        <HeroSection
-          post={{
-            ...posts[0],
-            excerpt: posts[0].excerpt,
-            category: posts[0].categories,
-          }}
-        />
+    <main className='max-w-7xl mx-auto px-4 py-6 space-y-12'>
+      {/* NIVEAU 1 : Le Grand Slider d'actualités chaudes Above the Fold */}
+      <HeroSlider posts={sliderPosts} />
 
-        {/* 2. Zone double colonne avec grille de mise en page */}
-        <section className='container max-w-7xl grid grid-cols-1 lg:grid-cols-3 gap-12 px-4'>
-          {/* Colonne Principale (Flux d'actualités) */}
-          <div className='lg:col-span-2 space-y-8'>
-            <h2 className='text-2xl md:text-3xl font-bold tracking-tight border-b pb-4 flex items-center gap-2'>
-              <Rss className='h-6 w-6 text-primary' />
-              Dernières publications
-            </h2>
-            <RecentPosts
-              posts={data.data.slice(1, 10).map((post: any) => ({
-                ...post,
-                title: post.title.rendered,
-                image: post._embedded['wp:featuredmedia'].at(0)?.source_url,
-                slug: post.slug,
-                date: post.date,
-              }))}
-            />
-          </div>
+      {/* NIVEAU 2 : Encart de coupure avec la présentation du Magazine Papier/Numérique */}
+      <HeroMagazine
+        magazine={{
+          title: `Hamaniè #${latestMagazine.acf.numero_magazine}`,
+          issueNumber: latestMagazine.acf.numero_magazine.toString(),
+          publishDate: latestMagazine.date,
+          coverImageUrl: latestMagazine.acf.image.toString(),
+          summary:
+            "Le mensuel des leaders et décideurs qui façonnent l'afrique",
+          linkUrl: latestMagazine.acf.lien_,
+        }}
+      />
 
-          {/* Barre latérale (Sidebar) */}
-          <aside className='space-y-8 lg:sticky lg:top-24 h-fit'>
-            <PopularPosts
-              posts={data.data.slice(10, 12).map((post: any) => ({
-                ...post,
-                title: post.title.rendered,
-                slug: post.slug,
-              }))}
-            />
-            <NewsletterForm />
-          </aside>
-        </section>
-      </div>
-      <div className='container max-w-7xl mx-auto px-4 py-12 space-y-16'>
-        {/* 3. Sections par catégorie */}
-        {categories.map((category) => (
-          <CategorySection
-            key={category.id}
-            title={category.title}
-            categoryId={category.id}
-            categorySlug={category.slug}
-            adImageUrl='https://via.placeholder.com/400x300?text=Publicité'
-            adLinkUrl='https://hamanie.news/contact/regie-pub'
-          />
-        ))}
-      </div>
-    </>
+      {/* NIVEAU 3 : Section Politique au format premium asymétrique */}
+      <SectionRouter layout='grid-3' rubrique={categories[0]} />
+
+      {/* NIVEAU 4 : Rupture visuelle avec le Carrousel Immersif à fond noir défilant */}
+      <SectionRouter rubrique={categories[1]} layout='cards-immersive-scroll' />
+
+      {/* NIVEAU 6 : Mise en page dense sans photo dédiée aux flux Économie */}
+      <SectionRouter rubrique={categories[2]} layout='split-eco' />
+
+      {/* NIVEAU 7 : Espace littéraire épuré sur fond crème pour les chroniques */}
+      <SectionRouter rubrique={categories[3]} layout='grand-format' />
+
+      {/* NIVEAU 8 : Fermeture de page rythmée style Dépêches d'agence (Éphéméride) */}
+      <SectionRouter rubrique={categories[4]} layout='grid-3' />
+
+      <YoutubeSectionAccueil />
+
+      <SectionRouter rubrique={categories[5]} layout='bento' />
+      <SectionRouter rubrique={categories[6]} layout='ephemeride' />
+      <SectionRouter rubrique={categories[7]} layout='grid-3' />
+      <SectionRouter rubrique={categories[8]} layout='split-eco' />
+      <SectionRouter rubrique={categories[9]} layout='split-eco' />
+      <SectionRouter rubrique={categories[10]} layout='split-eco' />
+      <SectionRouter rubrique={categories[11]} layout='split-eco' />
+    </main>
   )
 }
