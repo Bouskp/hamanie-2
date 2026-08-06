@@ -8,12 +8,41 @@ import {
 } from '@/lib/wordpress'
 import { categories } from '@/lib/utils'
 import YoutubeSectionAccueil from '@/components/YoutubeSectionAccueil'
+import { Metadata } from 'next'
 
 export const revalidate = 3600
 
-// =========================================================================
+export const metadata: Metadata = {
+  title: '',
+  description: '',
+  metadataBase: new URL('https://hamanie.news'),
+  alternates: {
+    canonical: '/',
+  },
+  openGraph: {
+    title: 'Hamanie.news',
+    description: "site d'infos pour l'Afrique, par l'Afrique",
+    type: 'website',
+    url: 'https://hamanie.news',
+    images: [
+      {
+        url: '/images/ogImage.jpg', // Image de partage par défaut de votre média (1200x630px)
+        width: 1200,
+        height: 630,
+        alt: 'hamanie.news',
+      },
+    ],
+    siteName: 'hamanie.news',
+    locale: 'fr_FR',
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'https://hamanie.news',
+    description: "site d'infos pour l'Afrique, par l'Afrique",
+    images: ['/images/ogHome.jpg'],
+  },
+}
 // 2. LE COMPOSANT DE LA PAGE PRINCIPALE
-// =========================================================================
 export default async function HomePage() {
   // Récupération de tous les flux WordPress en parallèle pour des performances maximales
   const response = await getPostsPaginated(1, 3)
@@ -42,7 +71,6 @@ export default async function HomePage() {
     }
   })
 
-  console.log(categories.slice(9, 12))
   return (
     <main className='max-w-7xl mx-auto px-4 py-6 space-y-12'>
       {/* NIVEAU 1 : Le Grand Slider d'actualités chaudes Above the Fold */}

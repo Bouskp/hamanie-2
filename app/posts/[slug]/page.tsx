@@ -5,7 +5,6 @@ import {
   getCategoriesByPost,
   getPostsByCategoryPaginated,
   getPostsPaginated,
-  getRecentPosts,
 } from '@/lib/wordpress'
 import { notFound } from 'next/navigation'
 import Image from 'next/image'
@@ -13,13 +12,53 @@ import Link from 'next/link'
 import { Badge } from '@/components/ui/badge'
 import { CalendarDays, Folder, Tag, User, Clock, RefreshCw } from 'lucide-react'
 import { calculateReadingTime, formatHtml } from '@/lib/utils'
+import { Metadata } from 'next'
 
 export const revalidate = 3600
 
 export const dynamicParams = true
 
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ slug: string }>
+}): Promise<Metadata> {
+  const { slug } = await params
+  const post = await getPostBySlug(slug)
+  if (!post) return {}
+
+  // Extraction de l'image mise en avant via la syntaxe _embedded
+  const featuredMedia = post._embedded?.['wp:featuredmedia']?.[0]?.source_url
+
+  // Utilisation de vos métadonnées personnalisées issues de WordPress
+  const seoTitle = post.title.rendered
+  const seoDesc = post.excerpt.rendered.replace(/<[^>]*>/g, '').trim()
+
+  return {
+    title: seoTitle,
+    description: seoDesc,
+    alternates: {
+      // Évite le contenu dupliqué (Indispensable pour le SEO)
+      canonical: `https://hamanie.news/${slug}`,
+    },
+    openGraph: {
+      title: seoTitle,
+      description: seoDesc,
+      type: 'article',
+      url: `https://hamanie.news/${slug}`,
+      images: featuredMedia ? [{ url: featuredMedia }] : [],
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title: seoTitle,
+      description: seoDesc,
+      images: featuredMedia ? [featuredMedia] : [],
+    },
+  }
+}
+
 export async function generateStaticParams() {
-  const response = await getPostsPaginated(1, 25)
+  const response = await getPostsPaginated(1, 20)
   const { data: posts } = response
   return posts.map((p) => ({
     slug: p.slug,

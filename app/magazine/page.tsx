@@ -1,9 +1,47 @@
-import { getFeaturedMediaById, getMagazinePaginated } from '@/lib/wordpress'
+import { getMagazinePaginated } from '@/lib/wordpress'
 import Link from 'next/link'
 import Image from 'next/image'
 import { MagGrid } from '@/components/magazines/MagGrid'
+import { Metadata } from 'next'
 
-export const revalidate = 86400
+export const revalidate = 3600
+
+export const metadata: Metadata = {
+  title:
+    "Hamaniè Mag : Le mensuel des leaders et décideurs qui façonnent l'afrique",
+  description:
+    'Découvrez les grands entretiens, analyses de la transformation locale et enquêtes exclusives sur plusieurs domaines.',
+  metadataBase: new URL('https://hamanie.news'),
+  alternates: {
+    canonical: '/magazine', // Force l'URL principale pour éviter le contenu dupliqué
+  },
+  openGraph: {
+    title:
+      "Hamaniè Mag : Le mensuel des leaders et décideurs qui façonnent l'afrique",
+    description:
+      'Découvrez les grands entretiens, analyses de la transformation locale et enquêtes exclusives sur plusieurs domaines.',
+    type: 'website',
+    url: 'https://hamanie.news',
+    siteName: 'hamanie.news',
+    locale: 'fr_FR',
+    images: [
+      {
+        url: '/images/og-magazine.jpg', // Image de couverture officielle du magazine (Format idéal : 1200x630px)
+        width: 1200,
+        height: 630,
+        alt: "Hamaniè Mag : Le mensuel des leaders et décideurs qui façonnent l'afrique",
+      },
+    ],
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title:
+      "Hamaniè Mag : Le mensuel des leaders et décideurs qui façonnent l'afrique",
+    description:
+      'Découvrez les grands entretiens, analyses de la transformation locale et enquêtes exclusives sur plusieurs domaines.',
+    images: ['/images/og-magazine.jpg'],
+  },
+}
 
 interface Props {
   searchParams: Promise<{
@@ -55,14 +93,14 @@ export default async function MagPage({ searchParams }: Props) {
               Dernier numéro en kiosque
             </span>
             <h2 className='text-3xl font-bold md:text-4xl'>
-              {`hamaniè ${latestMag?.acf?.numero_magazine}`}
+              {`Hamaniè ${latestMag?.acf?.numero_magazine}`}
             </h2>
             <div className='pt-4'>
               <Link
                 href={latestMag.acf.lien_}
                 className='inline-flex items-center justify-center px-6 py-3 border border-transparent text-base font-medium rounded-md text-white bg-black hover:bg-gray-800 transition-colors'
               >
-                lire le mag
+                Lire le mag
               </Link>
             </div>
           </div>
@@ -76,7 +114,7 @@ export default async function MagPage({ searchParams }: Props) {
             .map((mag) => {
               return {
                 numero: mag.acf.numero_magazine,
-                date: mag.date,
+                date: mag.date_gmt,
                 link: mag.acf.lien_,
                 imageUrl:
                   mag._embedded?.['wp:featuredmedia']?.[0].source_url || '',

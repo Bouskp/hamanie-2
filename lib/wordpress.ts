@@ -292,6 +292,7 @@ export async function getCategoryById(id: number): Promise<Category> {
 }
 
 export async function getCategoryBySlug(slug: string): Promise<Category> {
+  console.log(slug)
   return wordpressFetch<Category[]>('/wp-json/wp/v2/categories', { slug }).then(
     (categories) => categories[0],
   )

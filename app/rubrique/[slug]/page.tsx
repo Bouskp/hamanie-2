@@ -5,9 +5,8 @@ import { LeMondeLayout } from '@/components/rubriques/LeMonde'
 import { LesEchosLayout } from '@/components/rubriques/LesEchosLayout'
 import { NYTimesLayout } from '@/components/rubriques/NYTimesLayout'
 import { categories } from '@/lib/utils'
-import { getPostsByCategoryPaginated } from '@/lib/wordpress'
-import { notFound } from 'next/navigation'
-import { title } from 'process'
+import { getCategoryBySlug, getPostsByCategoryPaginated } from '@/lib/wordpress'
+import { Metadata } from 'next'
 
 interface Props {
   params: Promise<{
@@ -16,6 +15,44 @@ interface Props {
   searchParams: Promise<{
     page?: string
   }>
+}
+
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ slug: string }>
+}): Promise<Metadata> {
+  const { slug } = await params
+  const category = await getCategoryBySlug(slug)
+
+  if (!category) return {}
+
+  const seoTitle = `${category.name} - l'actualité et les infos sur hamaniè`
+  const seoDesc =
+    category.description ||
+    `Suivez en temps réel toute l'actualité, les innovations, les rapports exclusifs et les dossiers de fond du secteur ${category.name}.`
+
+  return {
+    title: seoTitle,
+    description: seoDesc,
+    alternates: {
+      // Indispensable pour la pagination (?page=2) : pointe toujours vers la rubrique racine
+      canonical: `https://hamanie.news/rubrique/${slug}`,
+    },
+    openGraph: {
+      title: seoTitle,
+      description: seoDesc,
+      type: 'website',
+      url: `https://hamanie.news/rubrique/${slug}`,
+      siteName: 'hamanie.news',
+      locale: 'fr_FR',
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title: seoTitle,
+      description: seoDesc,
+    },
+  }
 }
 
 export default async function Page({ params, searchParams }: Props) {

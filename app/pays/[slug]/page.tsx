@@ -1,40 +1,10 @@
+// app/pays/[slug]/page.tsx
+import { Metadata } from 'next'
+import { notFound } from 'next/navigation'
 import GrilleActualitesPays from '@/components/pays/GrilleActualitePays'
-
+import { CustomPagination } from '@/components/rubriques/CustomPagination'
 import { pays } from '@/lib/utils'
 import { getPostsPaginated } from '@/lib/wordpress'
-import Link from 'next/link'
-
-// Fonction pour générer les numéros de page visibles (ex: [1, '...', 4, 5, 6, '...', 200])
-function obtenirPagesVisibles(currentPage: number, totalPages: number) {
-  const delta = 1 // Nombre de pages à afficher avant et après la page courante
-  const range = []
-  const rangeWithDots = []
-  let l
-
-  for (let i = 1; i <= totalPages; i++) {
-    if (
-      i === 1 ||
-      i === totalPages ||
-      (i >= currentPage - delta && i <= currentPage + delta)
-    ) {
-      range.push(i)
-    }
-  }
-
-  for (let i of range) {
-    if (l) {
-      if (i - l === 2) {
-        rangeWithDots.push(l + 1)
-      } else if (i - l > 2) {
-        rangeWithDots.push('...')
-      }
-    }
-    rangeWithDots.push(i)
-    l = i
-  }
-
-  return rangeWithDots
-}
 
 interface Props {
   params: Promise<{
@@ -45,95 +15,99 @@ interface Props {
   }>
 }
 
+export const revalidate = 3600
+
+// 1. GÉNERATION DUSTATIC PARAMS POUR LE BUILD INITIAL SUR VERCEL
+export async function generateStaticParams() {
+  return pays.map((p) => ({
+    slug: p.name,
+  }))
+}
+
+// 2. GÉNERATION AUTOMATIQUE DU SEO POUR CHAQUE PAYS
+export async function generateMetadata({
+  params,
+}: Omit<Props, 'searchParams'>): Promise<Metadata> {
+  const { slug } = await params
+  const nomPays = decodeURIComponent(slug)
+
+  const seoTitle = `Focus ${nomPays} : Actualités, Analyses et Économie | Hamaniè news`
+  const seoDesc = `Retrouvez toute l'actualité sectorielle, les décryptages industriels, financiers, les opportunités de marché et la transformation locale en ${nomPays}.`
+
+  return {
+    title: seoTitle,
+    description: seoDesc,
+    alternates: {
+      canonical: `https://hamanie.news/${slug}`, // Évite le contenu dupliqué avec la pagination ?page=2
+    },
+    openGraph: {
+      title: seoTitle,
+      description: seoDesc,
+      type: 'website',
+      url: `https://hamanie.news/${slug}`,
+      siteName: 'hamanie.news',
+      locale: 'fr_FR',
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title: seoTitle,
+      description: seoDesc,
+    },
+  }
+}
+
+// 3. RENDU COMPOSANT DE LA PAGE PAYS
 export default async function Page({ params, searchParams }: Props) {
   const { slug } = await params
-  const paysFinded = pays.find(
-    (pays) =>
-      pays.name.toLocaleLowerCase() ===
-      decodeURIComponent(slug).toLocaleLowerCase(),
-  )
   const { page } = await searchParams
-  console.log(page, paysFinded, slug)
 
-  const currentPage = page ? parseInt(page) : 1
+  const nomPaysNettoye = decodeURIComponent(slug)
 
-  if (!paysFinded) <p>{"Le pays n'existe pas"}</p>
+  // Recherche du pays dans le fichier utilitaire
+  const paysTrouve = pays.find(
+    (p) => p.name.toLowerCase() === nomPaysNettoye.toLowerCase(),
+  )
 
-  const dataResponse = await getPostsPaginated(currentPage, 15, {
-    search: decodeURIComponent(slug),
+  // FIX : Renvoi propre d'une page 404 si le pays n'existe pas dans la configuration locale
+  if (!paysTrouve) {
+    notFound()
+  }
+
+  const currentPage = page ? parseInt(page, 10) : 1
+  const postsPerPage = 40
+
+  // Appel de l'API WordPress mémoïsée
+  const dataResponse = await getPostsPaginated(currentPage, postsPerPage, {
+    search: nomPaysNettoye,
   })
+
   const { data: posts, headers } = dataResponse
 
   return (
-    <div className='max-w-7xl mx-auto px-4 py-10'>
+    <div className='max-w-7xl mx-auto px-4 py-10 text-gray-900 antialiased'>
+      {/* En-tête de la Rubrique Focus Pays Style Presse */}
       <header className='w-full bg-white border-b border-gray-200 mb-10'>
-        <div className='max-w-7xl mx-auto px-4 pt-8'>
-          <div className='border-b-4 border-black pb-3'>
-            <span className='text-[10px] font-black tracking-widest text-red-600 uppercase block mb-1'>
-              Focus Pays
-            </span>
-            <h1 className='text-4xl md:text-5xl font-extrabold font-serif tracking-tighter uppercase text-gray-900 capitalize'>
-              {decodeURIComponent(slug)}
-            </h1>
-          </div>
+        <div className='max-w-7xl mx-auto pt-8 pb-3 border-b-4 border-black'>
+          <span className='text-[10px] font-black tracking-widest text-red-600 uppercase block mb-1 font-sans'>
+            Focus Pays
+          </span>
+          <h1 className='text-4xl md:text-5xl font-extrabold font-serif tracking-tighter uppercase text-gray-900 capitalize'>
+            {nomPaysNettoye}
+          </h1>
         </div>
       </header>
+
+      {/* Grille d'actualités du pays concerné */}
       <GrilleActualitesPays articles={posts} />
-      {headers.totalPages > 1 && (
-        <nav className='flex justify-between items-center border-t border-gray-200 pt-6 mt-12 w-full'>
-          {/* Bouton Précédent */}
-          <Link
-            href={`/pays/${slug}?page=${currentPage - 1}`}
-            className={`px-4 py-2 border text-xs font-bold uppercase tracking-widest rounded-none transition-colors ${
-              currentPage <= 1
-                ? 'pointer-events-none opacity-20 border-gray-200 text-gray-300'
-                : 'border-black text-black hover:bg-black hover:text-white'
-            }`}
-          >
-            Précédent
-          </Link>
 
-          {/* Numéros de pages numériques (Masqués sur très petits mobiles pour éviter les chevauchements) */}
-          <div className='hidden sm:flex items-center gap-1'>
-            {obtenirPagesVisibles(currentPage, headers.totalPages).map((p) => (
-              <Link
-                key={p}
-                href={`/pays/${slug}?page=${p}`}
-                className={`w-9 h-9 flex items-center justify-center text-xs font-bold border rounded-none transition-colors ${
-                  p === currentPage
-                    ? 'bg-black border-black text-white'
-                    : 'border-gray-200 text-gray-600 hover:border-black hover:text-black'
-                }`}
-              >
-                {p}
-              </Link>
-            ))}
-          </div>
-
-          {/* Indicateur de secours textuel visible uniquement sur mobile */}
-          <span className='sm:hidden text-xs font-black text-gray-500 tracking-wider'>
-            {currentPage} / {headers.totalPages}
-          </span>
-
-          {/* Bouton Suivant */}
-          <Link
-            href={`/pays/${slug}?page=${currentPage + 1}`}
-            className={`px-4 py-2 border text-xs font-bold uppercase tracking-widest rounded-none transition-colors ${
-              currentPage >= headers.totalPages
-                ? 'pointer-events-none opacity-20 border-gray-200 text-gray-300'
-                : 'border-black text-black hover:bg-black hover:text-white'
-            }`}
-          >
-            Suivant
-          </Link>
-        </nav>
-      )}
+      {/* PAGINATION UNIFIÉE : Utilisation de CustomPagination en remplacement du bloc nav artisanal */}
+      <div className='mt-12 flex justify-center border-t border-gray-100 pt-6'>
+        <CustomPagination
+          currentPage={currentPage}
+          totalPages={headers.totalPages}
+          basePath={`/pays/${slug}`}
+        />
+      </div>
     </div>
   )
-}
-
-export function generateStaticParams() {
-  return pays.map((pays) => ({
-    slug: pays.name,
-  }))
 }
