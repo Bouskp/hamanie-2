@@ -75,6 +75,7 @@ export const pays = [
   { name: 'Cameroun', code: 'cm', genre: 'm' },
   { name: 'RDC', code: 'cd', genre: 'f' },
   { name: 'Burkina Faso', code: 'bf', genre: 'm' },
+  { name: 'Nigeria', code: 'ng', genre: 'm' },
 ]
 
 export const imagePlaceholderBase64 = () => {

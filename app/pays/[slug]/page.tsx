@@ -3,8 +3,12 @@ import { Metadata } from 'next'
 import { notFound } from 'next/navigation'
 import GrilleActualitesPays from '@/components/pays/GrilleActualitePays'
 import { CustomPagination } from '@/components/rubriques/CustomPagination'
-import { pays } from '@/lib/utils'
+import { formatHtml, formatMediaDate, pays } from '@/lib/utils'
 import { getPostsPaginated } from '@/lib/wordpress'
+import { RdcLayout } from '@/components/pays/Congo'
+import { NigeriaLayout } from '@/components/pays/Nigeria'
+import { MarocLayout } from '@/components/pays/Maroc'
+import { CoteDivoireLayout } from '@/components/pays/Ivoire'
 
 interface Props {
   params: Promise<{
@@ -82,32 +86,67 @@ export default async function Page({ params, searchParams }: Props) {
   })
 
   const { data: posts, headers } = dataResponse
+  const renderedPosts = posts.map((item) => ({
+    ...item,
+    id: item.id.toString(),
+    slug: item.slug,
+    excerpt: formatHtml(item.excerpt.rendered),
+    image: item._embedded?.['wp:featuredmedia']?.[0].source_url || '',
+    date: formatMediaDate(item.date),
+    title: formatHtml(item.title.rendered),
+  }))
 
-  return (
-    <div className='max-w-7xl mx-auto px-4 py-10 text-gray-900 antialiased'>
-      {/* En-tête de la Rubrique Focus Pays Style Presse */}
-      <header className='w-full bg-white border-b border-gray-200 mb-10'>
-        <div className='max-w-7xl mx-auto pt-8 pb-3 border-b-4 border-black'>
-          <span className='text-[10px] font-black tracking-widest text-red-600 uppercase block mb-1 font-sans'>
-            Focus Pays
-          </span>
-          <h1 className='text-4xl md:text-5xl font-extrabold font-serif tracking-tighter uppercase text-gray-900 capitalize'>
-            {nomPaysNettoye}
-          </h1>
-        </div>
-      </header>
-
-      {/* Grille d'actualités du pays concerné */}
-      <GrilleActualitesPays articles={posts} />
-
-      {/* PAGINATION UNIFIÉE : Utilisation de CustomPagination en remplacement du bloc nav artisanal */}
-      <div className='mt-12 flex justify-center border-t border-gray-100 pt-6'>
-        <CustomPagination
+  switch (paysTrouve.name.toLowerCase()) {
+    case "côte d'ivoire":
+      return (
+        <CoteDivoireLayout
+          articles={renderedPosts}
           currentPage={currentPage}
           totalPages={headers.totalPages}
-          basePath={`/pays/${slug}`}
+          title="Côte d'Ivoire"
+          slug="côte d'ivoire"
         />
-      </div>
-    </div>
-  )
+      )
+    case 'maroc':
+      return (
+        <MarocLayout
+          articles={renderedPosts}
+          currentPage={currentPage}
+          totalPages={headers.totalPages}
+          title='Maroc'
+          slug='maroc'
+        />
+      )
+    case 'nigeria':
+      return (
+        <NigeriaLayout
+          articles={renderedPosts}
+          currentPage={currentPage}
+          totalPages={headers.totalPages}
+          title='Nigeria'
+          slug='nigeria'
+        />
+      )
+    case 'rdc':
+      return (
+        <RdcLayout
+          articles={renderedPosts}
+          currentPage={currentPage}
+          totalPages={headers.totalPages}
+          title='RDC'
+          slug='rdc'
+        />
+      )
+    default:
+      // Modèle de secours (votre grille standard d'actualités par défaut)
+      return (
+        <GrilleActualitesPays
+          articles={renderedPosts}
+          currentPage={currentPage}
+          totalPages={headers.totalPages}
+          title={paysTrouve.name}
+          slug={paysTrouve.code}
+        />
+      )
+  }
 }
