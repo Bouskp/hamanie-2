@@ -6,9 +6,10 @@ import {
   getMagazinePaginated,
   getPostsPaginated,
 } from '@/lib/wordpress'
-import { categories } from '@/lib/utils'
+import { categories, pays } from '@/lib/utils'
 import YoutubeSectionAccueil from '@/components/YoutubeSectionAccueil'
 import { Metadata } from 'next'
+import SectionPaysRouter from '@/components/home/SectionPaysRouter'
 
 export const revalidate = 3600
 
@@ -113,6 +114,9 @@ export default async function HomePage() {
       <SectionRouter rubrique={categories[9]} layout='split-eco' />
       <SectionRouter rubrique={categories[10]} layout='split-eco' />
       <SectionRouter rubrique={categories[11]} layout='split-eco' />
+      {pays.map((pays) => (
+        <SectionPaysRouter key={pays.code} countrySlug={pays.name} />
+      ))}
     </main>
   )
 }
