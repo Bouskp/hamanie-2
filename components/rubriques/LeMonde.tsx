@@ -5,6 +5,7 @@ import { Card } from '@/components/ui/card'
 import { Separator } from '@/components/ui/separator'
 import { CustomPagination } from '../rubriques/CustomPagination'
 import { formatHtml, formatMediaDate, cleanWordPressExcerpt } from '@/lib/utils'
+import Image from 'next/image'
 
 interface Post {
   id: string
@@ -14,6 +15,10 @@ interface Post {
   date: string
   image?: string
   subCategory?: string
+  focalPoint: {
+    x: string
+    y: string
+  }
 }
 
 export function LeMondeLayout({
@@ -56,10 +61,16 @@ export function LeMondeLayout({
                 ratio={16 / 10}
                 className='bg-muted overflow-hidden rounded-sm'
               >
-                <img
-                  src={leadArticle.image}
+                <Image
+                  src={leadArticle.image || ''}
+                  fill
                   alt={leadArticle.title}
                   className='object-cover w-full h-full group-hover:scale-[1.02] transition-transform duration-500'
+                  style={{
+                    objectPosition: leadArticle.focalPoint
+                      ? `${leadArticle.focalPoint.x} ${leadArticle.focalPoint.y}`
+                      : '',
+                  }}
                 />
               </AspectRatio>
               <div className='space-y-2'>
@@ -114,10 +125,16 @@ export function LeMondeLayout({
                   </div>
                   {post.image && (
                     <div className='w-24 h-16 shrink-0 relative overflow-hidden rounded-sm'>
-                      <img
+                      <Image
                         src={post.image}
-                        alt=''
+                        alt={post.title}
                         className='object-cover w-full h-full'
+                        style={{
+                          objectPosition: post.focalPoint
+                            ? `${post.focalPoint.x} ${post.focalPoint.y}`
+                            : '50% 50%',
+                        }}
+                        fill
                       />
                     </div>
                   )}
@@ -143,10 +160,16 @@ export function LeMondeLayout({
                   ratio={16 / 9}
                   className='bg-muted overflow-hidden rounded-sm mb-2'
                 >
-                  <img
+                  <Image
                     src={post.image}
-                    alt=''
+                    alt={post.title}
                     className='object-cover w-full h-full'
+                    style={{
+                      objectPosition: post.focalPoint
+                        ? `${post.focalPoint.x} ${post.focalPoint.y}`
+                        : '50% 50%',
+                    }}
+                    fill
                   />
                 </AspectRatio>
               )}

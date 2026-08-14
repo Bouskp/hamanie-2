@@ -5,6 +5,7 @@ import { Card, CardContent } from '@/components/ui/card'
 import { Separator } from '@/components/ui/separator'
 import { CustomPagination } from '../rubriques/CustomPagination'
 import { cleanWordPressExcerpt, formatHtml, formatMediaDate } from '@/lib/utils'
+import Image from 'next/image'
 
 interface Post {
   id: string
@@ -15,6 +16,10 @@ interface Post {
   image?: string
   subCategory?: string
   altStr?: string
+  focalPoint: {
+    x: string
+    y: string
+  }
 }
 
 export function BBCNewsLayout({
@@ -55,10 +60,16 @@ export function BBCNewsLayout({
                 ratio={16 / 9}
                 className='overflow-hidden rounded-xs'
               >
-                <img
-                  src={topStory.image || '/api/placeholder/800/450'}
+                <Image
+                  src={topStory.image || ''}
                   alt={topStory.title}
                   className='object-cover w-full h-full group-hover:opacity-95 transition-opacity'
+                  fill
+                  style={{
+                    objectPosition: topStory.focalPoint
+                      ? `${topStory.focalPoint.x} ${topStory.focalPoint.y}`
+                      : '50% 50%',
+                  }}
                 />
               </AspectRatio>
             </Link>
@@ -109,10 +120,16 @@ export function BBCNewsLayout({
                       ratio={16 / 9}
                       className='bg-neutral-50 overflow-hidden rounded-xs'
                     >
-                      <img
+                      <Image
                         src={post.image}
-                        alt=''
+                        alt={post.title}
                         className='object-cover w-full h-full'
+                        fill
+                        style={{
+                          objectPosition: post.focalPoint
+                            ? `${post.focalPoint.x} ${post.focalPoint.y}`
+                            : '50% 50%',
+                        }}
                       />
                     </AspectRatio>
                   </Link>
@@ -149,10 +166,16 @@ export function BBCNewsLayout({
             >
               {post.image && (
                 <div className='w-24 h-24 sm:w-28 sm:h-20 shrink-0 relative overflow-hidden bg-neutral-50'>
-                  <img
+                  <Image
                     src={post.image}
                     alt={post.title}
+                    fill
                     className='object-cover w-full h-full'
+                    style={{
+                      objectPosition: post.focalPoint
+                        ? `${post.focalPoint.x} ${post.focalPoint.y}`
+                        : '50% 50%',
+                    }}
                   />
                 </div>
               )}

@@ -4,12 +4,14 @@ import { AspectRatio } from '@/components/ui/aspect-ratio'
 import { Separator } from '@/components/ui/separator'
 import { Badge } from '@/components/ui/badge'
 import { CustomPagination } from './CustomPagination'
+
 import {
   calculateReadingTime,
   cleanWordPressExcerpt,
   formatHtml,
   formatMediaDate,
 } from '@/lib/utils' // Votre fonction de nettoyage
+import Image from 'next/image'
 
 interface Post {
   id: string
@@ -22,6 +24,10 @@ interface Post {
   readingTime?: string
   content: string
   altStr: string
+  focalPoint: {
+    x: string
+    y: string
+  }
 }
 
 export function NYTimesLayout({
@@ -86,10 +92,17 @@ export function NYTimesLayout({
                     ratio={16 / 10}
                     className='bg-neutral-100 overflow-hidden rounded-xs'
                   >
-                    <img
+                    <Image
                       src={mainStory.image}
                       alt={mainStory.title}
                       className='object-cover w-full h-full opacity-95 group-hover:opacity-100 transition-opacity radius-xs'
+                      fill
+                      sizes='(max-w-768px) 100vw, 50vw'
+                      style={{
+                        objectPosition: mainStory.focalPoint
+                          ? `${mainStory.focalPoint.x} ${mainStory.focalPoint.y}`
+                          : '50% 50%',
+                      }}
                     />
                   </AspectRatio>
 
@@ -161,10 +174,16 @@ export function NYTimesLayout({
                     ratio={16 / 9}
                     className='bg-neutral-50 overflow-hidden rounded-xs mb-1'
                   >
-                    <img
+                    <Image
                       src={post.image}
                       alt=''
+                      fill
                       className='object-cover w-full h-full'
+                      style={{
+                        objectPosition: post.focalPoint
+                          ? `${post.focalPoint.x} ${post.focalPoint.y}`
+                          : '50% 50%',
+                      }}
                     />
                   </AspectRatio>
                 )}

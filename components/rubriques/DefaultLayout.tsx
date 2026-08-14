@@ -5,6 +5,7 @@ import { Card, CardContent, CardHeader } from '@/components/ui/card'
 import { Separator } from '@/components/ui/separator'
 import { CustomPagination } from '../rubriques/CustomPagination'
 import { formatMediaDate } from '@/lib/utils'
+import Image from 'next/image'
 
 interface Post {
   id: string
@@ -14,6 +15,10 @@ interface Post {
   date: string
   image?: string
   subCategory?: string
+  focalPoint: {
+    x: string
+    y: string
+  }
 }
 
 export function DefaultLayout({
@@ -59,10 +64,16 @@ export function DefaultLayout({
                       ratio={16 / 10}
                       className='bg-gray-50 overflow-hidden'
                     >
-                      <img
-                        src={post.image}
+                      <Image
+                        src={post.image || ''}
                         alt={post.title}
+                        fill
                         className='object-cover w-full h-full group-hover:scale-105 transition-transform duration-500'
+                        style={{
+                          objectPosition: post.focalPoint
+                            ? `${post.focalPoint.x} ${post.focalPoint.y}`
+                            : '50% 50%',
+                        }}
                       />
                     </AspectRatio>
                   </Link>

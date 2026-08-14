@@ -87,6 +87,10 @@ export default async function Page({ params, searchParams }: Props) {
     altStr:
       item._embedded?.['wp:featuredmedia']?.[0].caption.rendered ||
       item.title.rendered,
+    focalPoint: {
+      x: item.focal_point.x,
+      y: item.focal_point.y,
+    },
   }))
 
   if (!posts || posts.length == 0) <p>{"Pas d'articles"}</p>
@@ -156,30 +160,6 @@ export default async function Page({ params, searchParams }: Props) {
         />
       )
   }
-
-  // return (
-  //   <main className='container max-w-7xl mx-auto px-4 py-10 space-y-12'>
-  //     {/* En-tête Institutionnel style Forbes */}
-  //     <div className='text-center py-6 border-b-4 border-black mb-6'>
-  //       <h1 className='text-4xl md:text-6xl font-serif font-black uppercase tracking-tight text-foreground'>
-  //         {category?.title}
-  //       </h1>
-  //     </div>
-
-  //     {/* 🚀 CONDITION DE PAGE : Le gros bloc asymétrique s'affiche UNIQUEMENT sur la page 1 */}
-  //     {isFirstPage && <ForbesHero posts={posts} />}
-
-  //     {/* La grille de flux s'affiche sur toutes les pages, s'adaptant automatiquement */}
-  //     <ForbesGrid posts={posts} isFirstPage={isFirstPage} />
-
-  //     {/* 🚀 LE COMPOSANT DE NAVIGATION BAS DE PAGE */}
-  //     <ForbesPagination
-  //       currentPage={currentPage}
-  //       totalPages={totalPages}
-  //       categorySlug={slug}
-  //     />
-  //   </main>
-  // )
 }
 
 export function generateStaticParams() {

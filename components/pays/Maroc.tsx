@@ -15,8 +15,10 @@ interface Post {
   image?: string
   date: string
   altStr?: string
-  focusX?: number
-  focusY?: number
+  focalPoint: {
+    x: string
+    y: string
+  }
 }
 
 interface LayoutProps {
@@ -54,7 +56,7 @@ export function MarocLayout({
         <div className='max-w-7xl mx-auto pt-6 pb-2 flex justify-between items-baseline gap-4'>
           <div className='flex items-center gap-2'>
             <h1
-              className='text-2xl md:text-3xl font-black uppercase tracking-tight text-slate-900'
+              className='text-2xl md:text-3xl font-condensed capitalize tracking-tight font-bold'
               dangerouslySetInnerHTML={{ __html: title }}
             />
           </div>
@@ -76,9 +78,12 @@ export function MarocLayout({
                   dangerouslySetInnerHTML={{ __html: post.title }}
                 />
               </Link>
-              <p className='text-gray-800 text-sm line-clamp-3 font-normal leading-relaxed'>
-                {cleanWordPressExcerpt(post.excerpt)}
-              </p>
+              <p
+                className='text-gray-800 text-sm line-clamp-3 font-normal leading-relaxed'
+                dangerouslySetInnerHTML={{
+                  __html: cleanWordPressExcerpt(post.excerpt),
+                }}
+              />
               <span className='text-[10px] text-slate-400 font-medium block'>
                 {post.date}
               </span>
@@ -102,7 +107,9 @@ export function MarocLayout({
                     priority
                     className='object-cover opacity-95 group-hover:opacity-100 transition-opacity'
                     style={{
-                      objectPosition: `${mainReport.focusX ?? 50}% ${mainReport.focusY ?? 50}%`,
+                      objectPosition: mainReport.focalPoint
+                        ? `${mainReport.focalPoint.x} ${mainReport.focalPoint.y}`
+                        : '50% 50%',
                     }}
                     sizes='(max-width: 768px) 100vw, 50vw'
                   />
@@ -211,11 +218,13 @@ export function MarocLayout({
                         >
                           <Image
                             src={post.image}
-                            alt=''
+                            alt={post.title}
                             fill
                             className='object-cover'
                             style={{
-                              objectPosition: `${post.focusX ?? 50}% ${post.focusY ?? 50}%`,
+                              objectPosition: post.focalPoint
+                                ? `${post.focalPoint.x} ${post.focalPoint.y}`
+                                : '50% 50%',
                             }}
                             sizes='(max-width: 768px) 100vw, 33vw'
                           />

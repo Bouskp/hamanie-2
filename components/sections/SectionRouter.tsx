@@ -1,13 +1,11 @@
 import { formatHtml, formatMediaDate } from '@/lib/utils'
-import {
-  getFeaturedMediaById,
-  getPostsByCategory,
-  getPostsByCategoryPaginated,
-  getPostsByCategorySlug,
-} from '@/lib/wordpress'
+import { getPostsByCategoryPaginated } from '@/lib/wordpress'
 import { ArrowRight } from 'lucide-react'
 import Image from 'next/image'
 import Link from 'next/link'
+import PortraitsGridBgLayout from '../SectionPortraitLayout'
+import SeriesEnquetesLayout from '../SeriesLayout'
+import StartupArticlesRegistry from '../StartupLayout'
 
 // Interface unifiée pour la donnée des articles WordPress
 interface Rubrique {
@@ -35,29 +33,48 @@ interface SectionRouterProps {
     | 'focus-central'
     | 'ephemeride'
     | 'cards-immersive-scroll' // Le nouveau layout immersif
+    | 'SeriesEnquetesLayout'
+    | 'PortraitsGridBgLayout'
+    | 'startup'
 }
 
 export default async function SectionRouter({
   rubrique,
   layout,
 }: SectionRouterProps) {
-  const { data: posts, headers } = await getPostsByCategoryPaginated(
-    rubrique.id,
-    1,
-    6,
-  )
+  const { data: posts } = await getPostsByCategoryPaginated(rubrique.id, 1, 6)
   const postRendered = posts.map((post) => ({
     ...post,
     id: post.id.toString(),
     title: formatHtml(post.title.rendered),
+    content: formatHtml(post.content.rendered),
     excerpt: formatHtml(post.excerpt.rendered),
     date: formatMediaDate(post.date),
-    featuredImage: post._embedded?.['wp:featuredmedia']?.[0].source_url || '',
+    featuredImage:
+      post._embedded?.['wp:featuredmedia']?.[0]?.media_details?.sizes?.full
+        ?.source_url || '',
+    titre: post._embedded?.['wp:featuredmedia']?.[0].caption.rendered || '',
+    focalPoint: {
+      x: post.focal_point.x,
+      y: post.focal_point.y,
+    },
   }))
 
   if (!posts || posts.length === 0)
     return (
-      <h1 className='uppercase font-condensed font-bold'>{rubrique.title}</h1>
+      <section className='my-16 border-t border-gray-100 pt-6 w-full'>
+        <div className='flex justify-between items-center mb-6 px-1'>
+          <h2
+            className='font-condensed text-2
+              xl md:text-2xl font-bold uppercase tracking-tight text-black group-hover:text-red-600 transition-colors'
+          >
+            {rubrique.title}
+          </h2>
+          <span className='text-xs font-condensed font-bold text-gray-400 uppercase tracking-widest hidden sm:block'>
+            voir plus
+          </span>
+        </div>
+      </section>
     )
 
   const rubriqueUrl = `/rubrique/${rubrique.slug}`
@@ -70,7 +87,10 @@ export default async function SectionRouter({
       return (
         <section className='my-16 border-t border-gray-100 pt-6 w-full'>
           <div className='flex justify-between items-center mb-6 px-1'>
-            <h2 className='font-serif text-2xl font-black uppercase tracking-tight text-gray-950'>
+            <h2
+              className='font-condensed text-2
+              xl md:text-2xl font-bold uppercase tracking-tight text-black group-hover:text-red-600 transition-colors'
+            >
               {rubrique.title}
             </h2>
             <span className='text-xs font-condensed font-bold text-gray-400 uppercase tracking-widest hidden sm:block'>
@@ -91,7 +111,12 @@ export default async function SectionRouter({
                         alt={post.title}
                         fill
                         sizes='(max-w-768px) 100vw, 33vw'
-                        className='object-cover opacity-70 group-hover:scale-105 transition-transform duration-500 ease-out'
+                        className={`object-cover opacity-70 group-hover:scale-105 transition-transform duration-500 ease-out object`}
+                        style={{
+                          objectPosition: post.focal_point
+                            ? `${post.focal_point.x} ${post.focal_point.y}`
+                            : '50% 50%',
+                        }}
                       />
                     }
                     <div className='absolute inset-0 bg-gradient-to-t from-black via-black/40 to-transparent' />
@@ -125,7 +150,7 @@ export default async function SectionRouter({
             <Link href={rubriqueUrl} className='group flex items-center gap-2'>
               <h2
                 className='font-condensed text-2
-              xl md:text-2xl font-bold uppercase tracking-tight text-black group-hover:text-red-600 transition-colors'
+                xl md:text-2xl font-bold uppercase tracking-tight text-black group-hover:text-red-600 transition-colors'
               >
                 {rubrique.title}
               </h2>
@@ -149,6 +174,11 @@ export default async function SectionRouter({
                     alt={hero.title}
                     fill
                     className='object-cover'
+                    style={{
+                      objectPosition: hero.focal_point
+                        ? `${hero.focal_point.x} ${hero.focal_point.y}`
+                        : '50% 50%',
+                    }}
                   />
                 </div>
               )}
@@ -223,6 +253,11 @@ export default async function SectionRouter({
                   alt={bigPost.title}
                   fill
                   className='object-cover'
+                  style={{
+                    objectPosition: bigPost.focal_point
+                      ? `${bigPost.focal_point.x} ${bigPost.focal_point.y}`
+                      : '50% 50%',
+                  }}
                 />
               </div>
               <Link href={`/posts/${bigPost.slug}`} className='block group'>
@@ -255,6 +290,11 @@ export default async function SectionRouter({
                         alt={post.title}
                         fill
                         className='object-cover'
+                        style={{
+                          objectPosition: post.focal_point
+                            ? `${post.focal_point.x} ${post.focal_point.y}`
+                            : '50% 50%',
+                        }}
                       />
                     </div>
                     <Link
@@ -333,8 +373,8 @@ export default async function SectionRouter({
           <div className='flex items-end justify-between border-b border-gray-100 pb-3 mb-6 gap-4'>
             <Link href={rubriqueUrl} className='group flex items-center gap-2'>
               <h2
-                className='font-condensed text-2
-              xl md:text-2xl font-bold uppercase tracking-tight text-black group-hover:text-red-600 transition-colors'
+                className='font-condensed 
+              text-2xl md:text-2xl font-bold uppercase tracking-tight text-black group-hover:text-red-600 transition-colors'
               >
                 {rubrique.title}
               </h2>
@@ -360,6 +400,11 @@ export default async function SectionRouter({
                     alt={ecoMain.title}
                     fill
                     className='object-cover'
+                    style={{
+                      objectPosition: ecoMain.focal_point
+                        ? `${ecoMain.focal_point.x} ${ecoMain.focal_point.y}`
+                        : '50% 50%',
+                    }}
                   />
                 </div>
               )}
@@ -394,7 +439,7 @@ export default async function SectionRouter({
             <Link href={rubriqueUrl} className='group flex items-center gap-2'>
               <h2
                 className='font-condensed text-2
-              xl md:text-2xl font-bold uppercase tracking-tight text-black group-hover:text-red-600 transition-colors'
+                xl md:text-2xl font-bold uppercase tracking-tight text-black group-hover:text-red-600 transition-colors'
               >
                 {rubrique.title}
               </h2>
@@ -457,7 +502,7 @@ export default async function SectionRouter({
             <Link href={rubriqueUrl} className='group flex items-center gap-2'>
               <h2
                 className='font-condensed text-2
-              xl md:text-2xl font-bold uppercase tracking-tight text-black group-hover:text-red-600 transition-colors'
+                xl md:text-2xl font-bold uppercase tracking-tight text-black group-hover:text-red-600 transition-colors'
               >
                 {rubrique.title}
               </h2>
@@ -487,7 +532,12 @@ export default async function SectionRouter({
                         alt={formatHtml(post.title)}
                         fill
                         sizes='(max-w-768px) 100vw, 33vw'
-                        className='object-cover object-center group-hover:scale-102 transition-transform duration-300 ease-out'
+                        className='object-cover group-hover:scale-102 transition-transform duration-300 ease-out'
+                        style={{
+                          objectPosition: post.focal_point
+                            ? `${post.focal_point.x} ${post.focal_point.y}`
+                            : '50% 50%',
+                        }}
                       />
                     </div>
                   )}
@@ -525,7 +575,7 @@ export default async function SectionRouter({
             <Link href={rubriqueUrl} className='group flex items-center gap-2'>
               <h2
                 className='font-condensed text-2
-              xl md:text-2xl font-bold uppercase tracking-tight text-black group-hover:text-red-600 transition-colors'
+                xl md:text-2xl font-bold uppercase tracking-tight text-black group-hover:text-red-600 transition-colors'
               >
                 {rubrique.title}
               </h2>
@@ -574,6 +624,11 @@ export default async function SectionRouter({
                           : '(max-w-768px) 100vw, 25vw'
                       }
                       className='object-cover opacity-60 group-hover:scale-102 transition-transform duration-500 ease-out'
+                      style={{
+                        objectPosition: post.focal_point
+                          ? `${post.focal_point.x} ${post.focal_point.y}`
+                          : '50% 50%',
+                      }}
                     />
                   )}
 
@@ -666,7 +721,12 @@ export default async function SectionRouter({
                     alt={formatHtml(centerPost.title)}
                     fill
                     sizes='(max-w-768px) 100vw, 50vw'
-                    className='object-cover object-center group-hover:scale-103 transition-transform duration-500 ease-out'
+                    className='object-cover group-hover:scale-103 transition-transform duration-500 ease-out'
+                    style={{
+                      objectPosition: centerPost.focal_point
+                        ? `${centerPost.focal_point.x} ${centerPost.focal_point.y}`
+                        : '50% 50%',
+                    }}
                   />
                 </div>
               )}
@@ -730,7 +790,10 @@ export default async function SectionRouter({
         <section className='my-16 border-t border-gray-200 dark:border-gray-800 pt-6 w-full'>
           {/* En-tête minimaliste de la rubrique */}
           <div className='flex justify-between items-center mb-6'>
-            <h2 className='font-condensed text-2xl font-black tracking-widest  dark:text-gray-500 uppercase'>
+            <h2
+              className='font-condensed text-2
+              xl md:text-2xl font-bold uppercase tracking-tight text-black group-hover:text-red-600 transition-colors'
+            >
               {rubrique.title}
             </h2>
           </div>
@@ -809,6 +872,27 @@ export default async function SectionRouter({
             })}
           </div>
         </section>
+      )
+
+    case 'SeriesEnquetesLayout':
+      return (
+        <SeriesEnquetesLayout
+          posts={postRendered}
+          title='Séries & Enquêtes'
+          linkUrl={rubriqueUrl}
+        />
+      )
+
+    case 'PortraitsGridBgLayout':
+      return <PortraitsGridBgLayout posts={postRendered} />
+
+    case 'startup':
+      return (
+        <StartupArticlesRegistry
+          posts={postRendered}
+          title='start-up'
+          linkUrl={rubriqueUrl}
+        />
       )
   }
 }

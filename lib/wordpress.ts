@@ -53,6 +53,7 @@ async function wordpressFetch<T>(
   path: string,
   query?: Record<string, any>,
   tags: string[] = ['wordpress'],
+  retries = 2,
 ): Promise<T> {
   if (!baseUrl) {
     throw new Error('WordPress URL not configured')
@@ -60,20 +61,56 @@ async function wordpressFetch<T>(
 
   const url = `${baseUrl}${path}${query ? `?${querystring.stringify(query)}` : ''}`
 
-  const response = await fetch(url, {
-    headers: { 'User-Agent': USER_AGENT },
-    next: { tags, revalidate: CACHE_TTL },
-  })
+  for (let attempt = 0; attempt <= retries; attempt++) {
+    const controller = new AbortController()
+    const timeoutId = setTimeout(() => controller.abort(), 10000) // 10s max par tentative
 
-  if (!response.ok) {
-    throw new WordPressAPIError(
-      `WordPress API request failed: ${response.statusText}`,
-      response.status,
-      url,
-    )
+    try {
+      const response = await fetch(url, {
+        headers: { 'User-Agent': USER_AGENT },
+        next: { tags, revalidate: CACHE_TTL },
+        signal: controller.signal,
+      })
+
+      clearTimeout(timeoutId)
+
+      if (!response.ok) {
+        const body = await response.text().catch(() => '')
+        throw new WordPressAPIError(
+          `WordPress API request failed: ${response.status} ${response.statusText} — ${body.slice(0, 200)}`,
+          response.status,
+          url,
+        )
+      }
+
+      return await response.json()
+    } catch (err) {
+      clearTimeout(timeoutId)
+
+      const isLastAttempt = attempt === retries
+      const isAbort = err instanceof Error && err.name === 'AbortError'
+
+      console.error(
+        `[wordpressFetch] Tentative ${attempt + 1}/${retries + 1} échouée pour ${url}: ${
+          isAbort ? 'timeout' : (err as Error).message
+        }`,
+      )
+
+      if (isLastAttempt) {
+        throw err
+      }
+
+      // backoff progressif avant de réessayer
+      await new Promise((r) => setTimeout(r, 300 * (attempt + 1)))
+    }
   }
 
-  return response.json()
+  // Ne devrait jamais être atteint, mais TypeScript veut un retour explicite
+  throw new WordPressAPIError(
+    'WordPress API request failed after retries',
+    0,
+    url,
+  )
 }
 
 // Graceful fetch - returns fallback when WordPress unavailable or on error
@@ -605,6 +642,19 @@ export async function getAllMagazineSlugs(): Promise<{ slug: string }[]> {
     )
     return []
   }
+}
+
+export async function getPostsByZonePaginated(
+  zoneId: number,
+  page: number = 1,
+  perPage: number = 9,
+): Promise<WordPressResponse<Post[]>> {
+  return wordpressFetchPaginatedGraceful<Post>('/wp-json/wp/v2/posts', {
+    _embed: true,
+    per_page: perPage,
+    page,
+    zone: zoneId,
+  })
 }
 
 export { WordPressAPIError }

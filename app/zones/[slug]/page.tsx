@@ -3,8 +3,8 @@ import { Metadata } from 'next'
 import { notFound } from 'next/navigation'
 import GrilleActualitesPays from '@/components/pays/GrilleActualitePays'
 import { CustomPagination } from '@/components/rubriques/CustomPagination'
-import { formatHtml, formatMediaDate, pays } from '@/lib/utils'
-import { getPostsPaginated } from '@/lib/wordpress'
+import { formatHtml, formatMediaDate, zones } from '@/lib/utils'
+import { getPostsByZonePaginated, getPostsPaginated } from '@/lib/wordpress'
 import { RdcLayout } from '@/components/pays/Congo'
 import { NigeriaLayout } from '@/components/pays/Nigeria'
 import { MarocLayout } from '@/components/pays/Maroc'
@@ -23,7 +23,7 @@ export const revalidate = 3600
 
 // 1. GÉNERATION DUSTATIC PARAMS POUR LE BUILD INITIAL SUR VERCEL
 export async function generateStaticParams() {
-  return pays.map((p) => ({
+  return zones.map((p) => ({
     slug: p.name,
   }))
 }
@@ -68,12 +68,10 @@ export default async function Page({ params, searchParams }: Props) {
   const nomPaysNettoye = decodeURIComponent(slug)
 
   // Recherche du pays dans le fichier utilitaire
-  const paysTrouve = pays.find(
-    (p) => p.name.toLowerCase() === nomPaysNettoye.toLowerCase(),
-  )
+  const zoneTrouve = zones.find((p) => p.slug === nomPaysNettoye)
 
   // FIX : Renvoi propre d'une page 404 si le pays n'existe pas dans la configuration locale
-  if (!paysTrouve) {
+  if (!zoneTrouve) {
     notFound()
   }
 
@@ -81,9 +79,11 @@ export default async function Page({ params, searchParams }: Props) {
   const postsPerPage = 40
 
   // Appel de l'API WordPress mémoïsée
-  const dataResponse = await getPostsPaginated(currentPage, postsPerPage, {
-    search: nomPaysNettoye,
-  })
+  const dataResponse = await getPostsByZonePaginated(
+    zoneTrouve.id,
+    currentPage,
+    postsPerPage,
+  )
 
   const { data: posts, headers } = dataResponse
   const renderedPosts = posts.map((item) => ({
@@ -94,47 +94,51 @@ export default async function Page({ params, searchParams }: Props) {
     image: item._embedded?.['wp:featuredmedia']?.[0].source_url || '',
     date: formatMediaDate(item.date),
     title: formatHtml(item.title.rendered),
+    focalPoint: {
+      x: item.focal_point.x,
+      y: item.focal_point.y,
+    },
   }))
 
-  switch (paysTrouve.name.toLowerCase()) {
-    case "côte d'ivoire":
+  switch (zoneTrouve.slug) {
+    case 'afrique-de-l-ouest':
       return (
         <CoteDivoireLayout
           articles={renderedPosts}
           currentPage={currentPage}
           totalPages={headers.totalPages}
-          title="Côte d'Ivoire"
-          slug="côte d'ivoire"
+          title={zoneTrouve.name}
+          slug={zoneTrouve.slug}
         />
       )
-    case 'maroc':
+    case 'afrique-du-nord':
       return (
         <MarocLayout
           articles={renderedPosts}
           currentPage={currentPage}
           totalPages={headers.totalPages}
-          title='Maroc'
-          slug='maroc'
+          title={zoneTrouve.name}
+          slug={zoneTrouve.slug}
         />
       )
-    case 'nigeria':
+    case 'afrique-de-l-est':
       return (
         <NigeriaLayout
           articles={renderedPosts}
           currentPage={currentPage}
           totalPages={headers.totalPages}
-          title='Nigeria'
-          slug='nigeria'
+          title={zoneTrouve.name}
+          slug={zoneTrouve.slug}
         />
       )
-    case 'rdc':
+    case 'afrique-du-sud':
       return (
         <RdcLayout
           articles={renderedPosts}
           currentPage={currentPage}
           totalPages={headers.totalPages}
-          title='RDC'
-          slug='rdc'
+          title={zoneTrouve.name}
+          slug={zoneTrouve.slug}
         />
       )
     default:
@@ -144,8 +148,8 @@ export default async function Page({ params, searchParams }: Props) {
           articles={renderedPosts}
           currentPage={currentPage}
           totalPages={headers.totalPages}
-          title={paysTrouve.name}
-          slug={paysTrouve.code}
+          title={zoneTrouve.name}
+          slug={zoneTrouve.slug}
         />
       )
   }

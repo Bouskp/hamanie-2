@@ -2,40 +2,17 @@
 
 import Link from 'next/link'
 import Image from 'next/image'
-import { categories, cn } from '@/lib/utils'
+import { categories } from '@/lib/utils'
 import { usePathname } from 'next/navigation'
 import logo from '../../app/images/logo.png'
 
-import {
-  NavigationMenu,
-  NavigationMenuContent,
-  NavigationMenuItem,
-  NavigationMenuLink,
-  NavigationMenuList,
-  NavigationMenuTrigger,
-} from '@/components/ui/navigation-menu'
-
-interface MenuLinks {
-  id: number
-  label: string
-  path: string
-  subItems?: MenuLinks[]
-}
-
-const menuLinks: MenuLinks[] = [
+const menuLinks = [
   { id: 1, label: 'Accueil', path: '/' },
   ...categories
     .map((item) => ({
       id: item.id,
       path: `/rubrique/${decodeURIComponent(item.slug)}`,
       label: item.title,
-      subItems: item.children
-        ? item.children.map((child) => ({
-            id: child.id,
-            path: `/rubrique/${decodeURIComponent(item.slug)}`,
-            label: item.title,
-          }))
-        : [],
     }))
     .filter((item) => ![1533, 1531, 1529].includes(item.id)),
   { id: 9, label: 'Magazines', path: '/magazine' },
@@ -96,60 +73,57 @@ export function Navbar() {
       DEUXIÈME NIVEAU : LA BARRE DES RUBRIQUES SCROLLABLE HORIZONTALEMENT (ALL DEVICES)
       ========================================================================= */}
       <div className='bg-white border-b border-gray-100 w-full'>
-        <div className='max-w-7xl mx-auto relative px-4 flex items-center h-12'>
-          <NavigationMenu className='max-w-full'>
-            <NavigationMenuList className='flex items-center gap-1 md:gap-4 overflow-x-auto scrollbar-none text-sm'>
-              {menuLinks.map((rubrique) => {
-                const hasChildren =
-                  rubrique.subItems && rubrique.subItems?.length > 0
-                const isActive =
-                  rubrique.path === decodeURIComponent(pathname) ||
-                  (rubrique.path !== '/' && pathname.startsWith(rubrique.path))
+        <div className='max-w-7xl mx-auto relative px-4 py-2 flex items-center'>
+          {/* Zone de navigation scrollable */}
+          <nav
+            className='
+          flex 
+          items-center 
+          gap-1 
+          md:gap-4 
+          h-12 
+          w-full 
+          overflow-x-auto 
+          scroll-smooth 
+          scrollbar-none 
+          overscroll-x-contain
+          -mx-4 
+          px-4
+        '
+          >
+            {menuLinks.map((rubrique) => {
+              const isActive =
+                rubrique.path === decodeURIComponent(pathname) ||
+                (rubrique.path !== '/' && pathname.startsWith(rubrique.path))
 
-                return (
-                  <NavigationMenuItem key={rubrique.id} className='relative'>
-                    {hasChildren ? (
-                      <>
-                        <NavigationMenuTrigger className='font-condensed text-xs font-black uppercase tracking-wide px-3 py-2 text-gray-800 bg-transparent hover:bg-transparent'>
-                          {rubrique.label}
-                        </NavigationMenuTrigger>
-                        <NavigationMenuContent className='absolute top-full left-0 w-full bg-white shadow-xl border-t'>
-                          <ul className='grid grid-cols-1 md:grid-cols-2 gap-4 p-4'>
-                            {/* Vos rubriques : Industrie, Construction, etc. */}
-                            {rubrique?.subItems?.map((sub) => (
-                              <li
-                                key={sub.label}
-                                className='p-2 hover:bg-gray-50 rounded-md'
-                              >
-                                <Link
-                                  href={sub.path}
-                                  className='text-red-600 font-bold uppercase text-xs'
-                                >
-                                  {sub.label}
-                                </Link>
-                              </li>
-                            ))}
-                          </ul>
-                        </NavigationMenuContent>
-                      </>
-                    ) : (
-                      <Link
-                        href={rubrique.path}
-                        className={cn(
-                          'font-condensed text-xs font-black uppercase tracking-wide px-3 py-2 transition-all inline-block border-b-2 border-transparent',
-                          isActive
-                            ? 'border-red-600 text-red-600'
-                            : 'text-gray-800',
-                        )}
-                      >
-                        {rubrique.label}
-                      </Link>
-                    )}
-                  </NavigationMenuItem>
-                )
-              })}
-            </NavigationMenuList>
-          </NavigationMenu>
+              return (
+                <Link
+                  key={rubrique.id}
+                  href={rubrique.path}
+                  className={
+                    `font-condensed 
+                    text-sm 
+                    font-black 
+                    uppercase 
+                    tracking-wide 
+                    px-3 
+                    py-6
+                    border-b-2 
+                    border-transparent 
+                    transition-all 
+                    whitespace-nowrap 
+                    inline-block` +
+                    (isActive ? ' border-red-600 text-red-600' : '')
+                  }
+                >
+                  {rubrique.label}
+                </Link>
+              )
+            })}
+          </nav>
+
+          {/* Effet d'ombrage fondu à droite pour indiquer visuellement le défilement */}
+          <div className='absolute right-0 top-0 bottom-0 w-8 bg-gradient-to-l from-white to-transparent pointer-events-none' />
         </div>
       </div>
     </header>

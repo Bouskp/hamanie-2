@@ -12,8 +12,10 @@ interface Post {
   excerpt: string
   image?: string
   date: string
-  focusX?: number
-  focusY?: number
+  focalPoint: {
+    x: string
+    y: string
+  }
 }
 
 interface SectionMosaiqueProps {
@@ -22,7 +24,6 @@ interface SectionMosaiqueProps {
     name: string
     slug: string
     colorClass?: string // Ex: "border-orange-600 text-orange-600" pour la CI
-    genre: string
   }
 }
 
@@ -37,25 +38,18 @@ export default function SectionMosaiquePaysAccueil({
   const leadArticle = articles[0] // 1er article : La grande Une
   const gridArticles = articles.slice(1, 5) // Les 4 articles secondaires à droite
 
-  const countryUrl = `/pays/${country.slug}`
+  const countryUrl = `/zones/${country.slug}`
   // Petite astuce pour n'extraire QUE la classe de texte (ex: text-orange-600) ou de bordure
-  const textClass =
-    country.colorClass?.split(' ').find((c: string) => c.startsWith('text-')) ||
-    'text-red-600'
-  const bgClass =
-    country.colorClass?.split(' ').find((c: string) => c.startsWith('bg-')) ||
-    'bg-red-600'
-  console.log(bgClass)
 
   return (
     <section
-      className={`border-t-2 border-neutral-900 pt-6 mb-16 antialiased bg-${bgClass} w-full`}
+      className={`border-t-2 border-neutral-900 pt-6 mb-16 antialiased w-full`}
     >
       {/* EN-TÊTE ÉDITORIAL : Titre cliquable + Lien "Voir tout" */}
       <div className='flex items-end justify-between border-b border-neutral-100 pb-3 mb-6 gap-4'>
         <Link href={countryUrl} className='group flex items-center gap-2'>
           <h2
-            className={`font-condensed text-xl md:text-2xl font-black uppercase tracking-tight text-black group-hover:${textClass} transition-colors`}
+            className={`font-condensed text-xl md:text-2xl font-black uppercase tracking-tight text-black group-hover transition-colors hover:text-red-600`}
           >
             {country.name}
           </h2>
@@ -64,12 +58,9 @@ export default function SectionMosaiquePaysAccueil({
         {/* Le lien vers la page pays globale */}
         <Link
           href={countryUrl}
-          className={`inline-flex items-center gap-1.5 text-xs font-black uppercase tracking-wider text-neutral-400 hover:${textClass} transition-colors group font-sans`}
+          className={`inline-flex items-center gap-1.5 text-xs font-black uppercase tracking-wider text-neutral-400 transition-colors group font-sans hover:text-red-600`}
         >
-          <span>
-            Toutes les infos sur {country.genre == 'm' ? 'le' : 'la'}{' '}
-            {country.name}
-          </span>
+          <span>Toutes les infos sur l'{country.name}</span>
           <ArrowRight className='w-3.5 h-3.5 group-hover:translate-x-0.5 transition-transform' />
         </Link>
       </div>
@@ -91,7 +82,9 @@ export default function SectionMosaiquePaysAccueil({
                     fill
                     className='object-cover group-hover:scale-[1.01] transition-transform duration-500 opacity-95 group-hover:opacity-100'
                     style={{
-                      objectPosition: `${leadArticle.focusX ?? 50}% ${leadArticle.focusY ?? 50}%`,
+                      objectPosition: leadArticle.focalPoint
+                        ? `${leadArticle.focalPoint.x} ${leadArticle.focalPoint.y}`
+                        : '50% 50%',
                     }}
                     sizes='(max-width: 1024px) 100vw, 55vw'
                   />
@@ -140,7 +133,9 @@ export default function SectionMosaiquePaysAccueil({
                       className='object-cover opacity-95 group-hover:opacity-100 transition-opacity'
                       sizes='(max-width: 768px) 100vw, 20vw'
                       style={{
-                        objectPosition: `${post.focusX ?? 50}% ${post.focusY ?? 50}%`,
+                        objectPosition: leadArticle.focalPoint
+                          ? `${leadArticle.focalPoint.x} ${leadArticle.focalPoint.y}`
+                          : '50% 50%',
                       }}
                     />
                   </Link>

@@ -3,13 +3,7 @@ import Link from 'next/link'
 import { Separator } from '@/components/ui/separator'
 import { Button } from '@/components/ui/button'
 import { ArrowUpRight, ShieldCheck } from 'lucide-react'
-import {
-  categories,
-  footerLinks,
-  pays,
-  RsLinksHamanie,
-  RsLinksMianMedia,
-} from '@/lib/utils'
+import { footerLinks, RsLinksHamanie, RsLinksMianMedia } from '@/lib/utils'
 
 export function YoutubeIcon({
   className = 'h-5 w-5',

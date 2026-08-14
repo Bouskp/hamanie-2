@@ -10,6 +10,7 @@ import {
   formatHtml,
   formatMediaDate,
 } from '@/lib/utils'
+import Image from 'next/image'
 
 interface Post {
   id: string
@@ -18,6 +19,10 @@ interface Post {
   path: string
   content: string
   date: string
+  focalPoint: {
+    x: string
+    y: string
+  }
   image?: string
   subCategory?: string
   readingTime?: string // Spécifique au style analyse financière
@@ -102,10 +107,16 @@ export function LesEchosLayout({
                   ratio={16 / 9}
                   className='bg-slate-50 overflow-hidden rounded-xs border border-slate-100'
                 >
-                  <img
+                  <Image
                     src={mainArticle.image}
                     alt={mainArticle.title}
+                    fill
                     className='object-cover w-full h-full group-hover:opacity-95 transition-opacity'
+                    style={{
+                      objectPosition: mainArticle.focalPoint
+                        ? `${mainArticle.focalPoint.x} ${mainArticle.focalPoint.y}`
+                        : '50% 50%',
+                    }}
                   />
                 </AspectRatio>
               )}
@@ -193,10 +204,16 @@ export function LesEchosLayout({
               </div>
               {post.image && (
                 <div className='w-28 h-20 shrink-0 relative overflow-hidden rounded-xs border border-slate-100'>
-                  <img
+                  <Image
                     src={post.image}
-                    alt=''
+                    alt={post.title}
+                    fill
                     className='object-cover w-full h-full'
+                    style={{
+                      objectPosition: post.focalPoint
+                        ? `${post.focalPoint.x} ${post.focalPoint.y}`
+                        : '50% 50%',
+                    }}
                   />
                 </div>
               )}

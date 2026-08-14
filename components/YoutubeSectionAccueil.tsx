@@ -18,7 +18,7 @@ interface VideoItem {
 export default function YoutubeSectionAccueil() {
   const [videos] = useState<VideoItem[]>([
     {
-      id: '1CmSlejo2C8',
+      id: 'gnwjwl-eMPc',
       titre: 'Financements structurés : le rôle décisif du juriste bancaire',
       description:
         'Dans ce deuxième épisode de The Financial Corner, Fabrice Ekouman reçoit Ahmed Ouattara, juriste spécialisé en financements structurés et en marchés de capitaux.Ils reviennent sur le rôle du juriste bancaire dans la structuration d’un financement, la négociation des contrats, les garanties, le cadre OHADA, les opérations transfrontalières et la gestion du risque juridique.Un échange concret pour mieux comprendre les coulisses des grandes opérations financières.',

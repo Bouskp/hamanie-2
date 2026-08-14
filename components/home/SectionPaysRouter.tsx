@@ -1,24 +1,21 @@
 // components/sections/SectionPaysRouter.tsx
-import { getPostsPaginated } from '@/lib/wordpress'
-import { pays } from '@/lib/utils'
+import { getPostsByZonePaginated, getPostsPaginated } from '@/lib/wordpress'
+import { zones } from '@/lib/utils'
 import SectionMosaiquePaysAccueil from './SectionMosaiquePaysAccueil'
+import { notFound } from 'next/navigation'
 
 interface SectionPaysRouterProps {
-  countrySlug: string // Le slug recherché (ex: 'cote-divoire', 'maroc', 'senegal')
+  slug: string
 }
 
 export default async function SectionPaysRouter({
-  countrySlug,
+  slug,
 }: SectionPaysRouterProps) {
   // 1. Recherche et sécurisation du pays cible dans votre configuration locale
-  const paysTrouve = pays.find(
-    (p) =>
-      p.name === countrySlug ||
-      p.name.toLowerCase() === countrySlug.toLowerCase(),
-  )
+  const zoneTrouve = zones.find((p) => p.slug === slug)
 
   // Si le pays demandé n'existe pas dans votre tableau utils, le routeur ne rend rien
-  if (!paysTrouve) return null
+  if (!zoneTrouve) return notFound()
 
   // 2. Requête API WordPress optimisée (On demande uniquement 5 articles pour la mosaïque)
   const postsPerPage = 5
@@ -27,14 +24,12 @@ export default async function SectionPaysRouter({
   let articlesFormatted = []
 
   try {
-    const dataResponse = await getPostsPaginated(currentPage, postsPerPage, {
-      search: paysTrouve.name, // WordPress cherche les articles liés au nom du pays
-    })
-
-    const { data: posts } = dataResponse
-
-    if (!posts || posts.length === 0) return null
-
+    const response = await getPostsByZonePaginated(
+      zoneTrouve.id,
+      currentPage,
+      postsPerPage,
+    )
+    const { data: posts, headers } = response
     // 3. Formatage et nettoyage chirurgical des données pour les composants graphiques
     articlesFormatted = posts.map((post: any) => ({
       id: post.id || post.slug,
@@ -43,9 +38,10 @@ export default async function SectionPaysRouter({
       // Nettoyage strict des résidus et crochets HTML [...] de l'extrait
       excerpt: post.excerpt?.rendered || post.excerpt || '',
       image:
-        post._embedded?.['wp:featuredmedia']?.[0]?.source_url ||
-        post.image ||
-        null,
+        post._embedded?.['wp:featuredmedia']?.[0]?.media_details?.sizes?.full
+          .source_url ||
+        post._embedded?.['wp:featuredmedia']?.[0]?.media_details?.sizes?.large
+          .source_url,
       date: post.date
         ? new Date(post.date).toLocaleDateString('fr-FR', {
             day: 'numeric',
@@ -54,33 +50,24 @@ export default async function SectionPaysRouter({
           })
         : '',
       // Récupération sécurisée du Media Focus Point de l'API REST
-      focusX: post._embedded?.['wp:featuredmedia']?.[0]?.focus_point?.x ?? 50,
-      focusY: post._embedded?.['wp:featuredmedia']?.[0]?.focus_point?.y ?? 50,
+      focalPoint: {
+        x: post.focal_point.x,
+        y: post.focal_point.y,
+      },
       altStr: post._embedded?.['wp:featuredmedia']?.[0]?.alt_text || '',
     }))
   } catch (error) {
     console.error(
-      `Erreur d'extraction API WordPress pour le pays ${paysTrouve.name}:`,
+      `Erreur d'extraction API WordPress pour le pays ${zoneTrouve.name}:`,
       error,
     )
     return null // Évite de faire planter toute la page d'accueil si l'API WordPress est temporairement indisponible
   }
 
-  // 4. Configuration dynamique de la couleur de la charte selon le pays
-  let colorClass = 'border-red-600 text-red-600' // Secours par défaut
-  if (paysTrouve.code === 'ci') colorClass = 'border-orange-500 text-orange-600'
-  if (paysTrouve.code === 'ma')
-    colorClass = 'border-emerald-800 text-emerald-800'
-  if (paysTrouve.code === 'sn')
-    colorClass = 'border-emerald-600 text-emerald-600'
-  if (paysTrouve.code === 'cd') colorClass = 'border-sky-600 text-sky-600'
-  if (paysTrouve.code === 'ng') colorClass = 'border-green-700 text-green-700'
-
   const countryConfig = {
-    name: paysTrouve.name,
-    slug: paysTrouve.name.toLocaleLowerCase(),
-    colorClass,
-    genre: paysTrouve.genre,
+    id: zoneTrouve.id,
+    name: zoneTrouve.name,
+    slug: zoneTrouve.slug,
   }
 
   // 5. Envoi des données prêtes et nettoyées au composant de mise en page Mosaïque

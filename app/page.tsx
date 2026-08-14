@@ -6,7 +6,7 @@ import {
   getMagazinePaginated,
   getPostsPaginated,
 } from '@/lib/wordpress'
-import { categories, pays } from '@/lib/utils'
+import { categories, zones } from '@/lib/utils'
 import YoutubeSectionAccueil from '@/components/YoutubeSectionAccueil'
 import { Metadata } from 'next'
 import SectionPaysRouter from '@/components/home/SectionPaysRouter'
@@ -54,14 +54,9 @@ export default async function HomePage() {
 
   // On isole les 3 premiers articles globaux de la politique pour le HeroSlider tout en haut
   const sliderPosts = recentPost.slice(0, 3).map((post, idx) => {
-    const featuredImage =
-      post._embedded?.['wp:featuredmedia']?.[0].source_url ||
-      (post.featured_media > 0
-        ? getFeaturedMediaById(post.featured_media).then(
-            (data) => data.source_url,
-          )
-        : ''
-      ).toString()
+    const media = post._embedded?.['wp:featuredmedia']?.[0]
+    const featuredImage = media?.media_details?.sizes?.full?.source_url || ''
+
     return {
       ...post,
       title: post.title.rendered,
@@ -69,6 +64,10 @@ export default async function HomePage() {
       id: idx.toString(),
       category: post.categories,
       featuredImage: featuredImage,
+      focalPoint: {
+        x: post.focal_point.x,
+        y: post.focal_point.y,
+      },
     }
   })
 
@@ -103,7 +102,7 @@ export default async function HomePage() {
       <SectionRouter rubrique={categories[3]} layout='grand-format' />
 
       {/* NIVEAU 8 : Fermeture de page rythmée style Dépêches d'agence (Éphéméride) */}
-      <SectionRouter rubrique={categories[4]} layout='grid-3' />
+      <SectionRouter rubrique={categories[4]} layout='startup' />
 
       <YoutubeSectionAccueil />
 
@@ -111,12 +110,11 @@ export default async function HomePage() {
       <SectionRouter rubrique={categories[6]} layout='ephemeride' />
       <SectionRouter rubrique={categories[7]} layout='grid-3' />
       <SectionRouter rubrique={categories[8]} layout='split-eco' />
-      <SectionRouter rubrique={categories[9]} layout='split-eco' />
-      <SectionRouter rubrique={categories[10]} layout='split-eco' />
-      <SectionRouter rubrique={categories[11]} layout='split-eco' />
-      {pays.map((pays) => (
-        <SectionPaysRouter key={pays.code} countrySlug={pays.name} />
-      ))}
+      <SectionRouter rubrique={categories[9]} layout='PortraitsGridBgLayout' />
+      <SectionRouter rubrique={categories[10]} layout='SeriesEnquetesLayout' />
+      {zones.map(function (zone, index) {
+        return <SectionPaysRouter key={index} slug={zone.slug} />
+      })}
     </main>
   )
 }

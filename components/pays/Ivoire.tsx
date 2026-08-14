@@ -2,7 +2,6 @@
 import Link from 'next/link'
 import Image from 'next/image'
 import { AspectRatio } from '@/components/ui/aspect-ratio'
-import { Card, CardContent, CardHeader } from '@/components/ui/card'
 import { Separator } from '@/components/ui/separator'
 import { Zap } from 'lucide-react'
 import { CustomPagination } from '@/components/rubriques/CustomPagination'
@@ -16,8 +15,10 @@ interface Post {
   image?: string
   date: string
   altStr?: string
-  focusX?: number
-  focusY?: number
+  focalPoint: {
+    x: string
+    y: string
+  }
 }
 
 interface LayoutProps {
@@ -36,25 +37,19 @@ export function CoteDivoireLayout({
   slug,
 }: LayoutProps) {
   const leadArticle = articles[0]
-  const popularArticles = articles.slice(0, 5)
-  const feedArticles = articles.slice(1)
+  const popularArticles = articles.slice(1, 5)
+  const feedArticles = articles.slice(5)
 
   return (
     <div className='space-y-12 w-full'>
       <header className='w-full bg-white border-b border-gray-200'>
         <div className='max-w-7xl mx-auto pb-3 border-b-4 border-black flex justify-between items-end gap-4'>
           <div>
-            <span className='text-[10px] font-black tracking-widest text-orange-600 uppercase block mb-1 font-sans'>
-              Focus Pays
-            </span>
             <h1
-              className='text-3xl md:text-5xl font-black font-serif tracking-tight text-gray-900 capitalize'
+              className='text-2xl md:text-4xl font-black font-serif tracking-tight text-gray-900 capitalize'
               dangerouslySetInnerHTML={{ __html: title }}
             />
           </div>
-          <span className='hidden sm:block text-xs font-mono uppercase tracking-widest text-gray-400 font-bold'>
-            CI • Page {currentPage}
-          </span>
         </div>
       </header>
 
@@ -75,7 +70,9 @@ export function CoteDivoireLayout({
                     priority
                     className='object-cover'
                     style={{
-                      objectPosition: `${leadArticle.focusX ?? 50}% ${leadArticle.focusY ?? 50}%`,
+                      objectPosition: leadArticle.focalPoint
+                        ? `${leadArticle.focalPoint.x} ${leadArticle.focalPoint.y}`
+                        : '50% 50%',
                     }}
                     sizes='(max-width: 1024px) 100vw, 66vw'
                   />
@@ -106,9 +103,9 @@ export function CoteDivoireLayout({
 
         <aside className='lg:col-span-4 bg-white p-5 border border-gray-200/80 rounded-xl space-y-4 lg:sticky lg:top-24'>
           <div className='flex items-center gap-1.5 border-b border-gray-100 pb-2'>
-            <Zap className='w-4 h-4 text-orange-600 fill-orange-600' />
+            <Zap className='w-4 h-4 text-red-500 fill-red-500' />
             <h3 className='font-sans text-xs font-black uppercase tracking-wider text-gray-400'>
-              Les plus lus Côte d'Ivoire
+              Les plus lus
             </h3>
           </div>
           <div className='space-y-4 divide-y divide-gray-100'>
@@ -118,11 +115,8 @@ export function CoteDivoireLayout({
                 className={`group space-y-1 ${idx > 0 ? 'pt-4' : ''}`}
               >
                 <Link href={`/posts/${post.slug}`} className='block space-y-1'>
-                  <span className='text-xs font-bold text-orange-600 font-mono'>
-                    0{idx + 1} .
-                  </span>
                   <h4
-                    className='font-serif font-bold text-sm text-gray-800 group-hover:text-orange-600 transition-colors leading-snug line-clamp-2'
+                    className='font-serif font-bold text-sm text-gray-800 group-hover:text-red-500 transition-colors leading-snug line-clamp-2'
                     dangerouslySetInnerHTML={{ __html: post.title }}
                   />
                 </Link>
@@ -157,11 +151,13 @@ export function CoteDivoireLayout({
                   >
                     <Image
                       src={post.image}
-                      alt=''
+                      alt={post.title}
                       fill
                       className='object-cover'
                       style={{
-                        objectPosition: `${post.focusX ?? 50}% ${post.focusY ?? 50}%`,
+                        objectPosition: leadArticle.focalPoint
+                          ? `${leadArticle.focalPoint.x} ${leadArticle.focalPoint.y}`
+                          : '50% 50%',
                       }}
                       sizes='(max-width: 768px) 100vw, 33vw'
                     />
@@ -170,7 +166,7 @@ export function CoteDivoireLayout({
               )}
               <Link href={`/posts/${post.slug}`}>
                 <h4
-                  className='font-sans font-bold text-sm hover:text-orange-600 transition-colors leading-snug line-clamp-2'
+                  className='font-sans font-bold text-sm hover:text-red-500 transition-colors leading-snug line-clamp-2'
                   dangerouslySetInnerHTML={{ __html: post.title }}
                 />
               </Link>

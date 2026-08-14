@@ -1,6 +1,5 @@
 import {
   getPostBySlug,
-  getAllPostSlugs,
   getTagsByPost,
   getCategoriesByPost,
   getPostsByCategoryPaginated,
@@ -185,7 +184,12 @@ export default async function PostPage({
                   priority
                   quality={85}
                   sizes='(max-width: 1024px) 100vw, 75vw'
-                  className='object-cover object-top'
+                  className='object-cover'
+                  style={{
+                    objectPosition: post.focal_point
+                      ? `${post.focal_point.x} ${post.focal_point.y}`
+                      : '50% 50%',
+                  }}
                 />
               </div>
             )}
@@ -224,7 +228,9 @@ export default async function PostPage({
           <div
             className='prose prose-base max-w-none prose-p:mt-0 prose-p:mb-4 prose-headings:mt-6 prose-headings:mb-3 prose-headings:font-serif prose-justify prose-p:text-black dark:prose-p:text-gray-100 prose-headings:text-black dark:prose-headings:text-white prose-strong:text-black dark:prose-strong:text-white'
             dangerouslySetInnerHTML={{
-              __html: formatHtml(post.content?.rendered || ''),
+              __html: formatHtml(
+                post.content?.rendered.replaceAll('Thom Biakpa', '') || '',
+              ),
             }}
           />
         </div>
@@ -242,9 +248,8 @@ export default async function PostPage({
                     <Badge
                       variant='secondary'
                       className='hover:bg-muted transition-colors'
-                    >
-                      {cat.name}
-                    </Badge>
+                      dangerouslySetInnerHTML={{ __html: cat.name }}
+                    />
                   </Link>
                 ))}
               </div>

@@ -14,6 +14,10 @@ export interface SliderPost {
   featuredImage: string
   category: number[]
   date: string
+  focalPoint: {
+    x: string
+    y: string
+  }
 }
 
 export default function HeroSlider({ posts }: { posts: SliderPost[] }) {
@@ -52,6 +56,11 @@ export default function HeroSlider({ posts }: { posts: SliderPost[] }) {
                   priority={index === 0} // Charge immédiatement la toute première image (Performance SEO LCP)
                   className='object-cover opacity-75'
                   sizes='100vw'
+                  style={{
+                    objectPosition: post.focalPoint
+                      ? `${post.focalPoint.x} ${post.focalPoint.y}`
+                      : '50% 50%',
+                  }}
                 />
               )}
 
@@ -62,11 +71,31 @@ export default function HeroSlider({ posts }: { posts: SliderPost[] }) {
               <div className='absolute inset-x-0 bottom-0 p-6 md:p-12 max-w-4xl space-y-3 text-white z-10'>
                 <div className='flex items-center gap-3 text-xs font-condensed font-black uppercase tracking-widest text-red-500'>
                   <span>
-                    {post.category.map((item, idx) => (
-                      <span key={idx} className='mr-2'>
-                        {categories.find((fc) => fc.id == item)?.slug + '  '}
-                      </span>
-                    ))}
+                    <span>
+                      {(() => {
+                        // 1. On filtre pour ne garder que les catégories qui existent vraiment dans notre liste
+                        const validCategories = post.category
+                          ? post.category
+                              .map((item) =>
+                                categories.find((cat) => cat.id == item),
+                              )
+                              .filter(Boolean) // Supprime les éléments non trouvés (undefined)
+                          : []
+
+                        // 2. Si aucune catégorie valide n'a été trouvée ou si le tableau est vide
+                        if (validCategories.length === 0) {
+                          return <span className='mr-2'>A la une</span>
+                        }
+
+                        // 3. Si on a des catégories valides, on les affiche proprement séparées par une virgule
+                        return validCategories.map((category, idx) => (
+                          <span key={category?.id || idx} className='mr-2'>
+                            {category?.slug}
+                            {idx < validCategories.length - 1 && ', '}
+                          </span>
+                        ))
+                      })()}
+                    </span>
                   </span>
                   <span className='w-1 h-1 rounded-full bg-gray-500' />
                   <span className='text-gray-300 font-normal normal-case font-sans'>

@@ -13,6 +13,11 @@ interface WPEntity {
   }
 }
 
+interface FocalPoint {
+  x: string // ex: "53%"
+  y: string // ex: "33%"
+}
+
 interface RenderedContent {
   rendered: string
   protected: boolean
@@ -83,6 +88,7 @@ export interface Post extends WPEntity {
   tags: number[]
   meta: Record<string, unknown>
   _embedded?: PostEmbedded
+  focal_point: FocalPoint
 }
 
 export interface Page extends WPEntity {

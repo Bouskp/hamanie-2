@@ -33,29 +33,6 @@ export const categories: Category[] = [
   { id: 959, slug: 'entreprises', title: 'Entreprises' },
   { id: 1527, slug: 'start-up', title: 'Start-up' },
   { id: 74, slug: 'societe', title: 'Société' },
-  {
-    id: 1539,
-    slug: 'secteurs',
-    title: 'Secteurs',
-    children: [
-      { id: 971, slug: 'agriculture', title: 'Agriculture' },
-      {
-        id: 1545,
-        slug: 'banque',
-        title: 'Banque',
-      },
-      {
-        id: 1543,
-        slug: 'construction',
-        title: 'Contruction',
-      },
-      {
-        id: 1541,
-        slug: 'industrie',
-        title: 'Industrie',
-      },
-    ],
-  },
   { id: 971, slug: 'education-formation', title: 'Éducation & Formation' },
   { id: 609, slug: 'international', title: 'International' },
   { id: 1533, slug: 'idees-analyses', title: 'Idees & Analyses' },
@@ -67,15 +44,23 @@ export const categories: Category[] = [
   },
 ]
 
-export const pays = [
-  { name: "Côte d'Ivoire", code: 'ci', genre: 'f' },
-  { name: 'Sénégal', code: 'sn', genre: 'm' },
-  { name: 'Mali', code: 'ml', genre: 'm' },
-  { name: 'Maroc', code: 'ma', genre: 'm' },
-  { name: 'Cameroun', code: 'cm', genre: 'm' },
-  { name: 'RDC', code: 'cd', genre: 'f' },
-  { name: 'Burkina Faso', code: 'bf', genre: 'm' },
-  { name: 'Nigeria', code: 'ng', genre: 'm' },
+export const zones = [
+  { id: 1629, slug: 'afrique-de-l-ouest', name: "Afrique de l'Ouest" },
+  {
+    id: 1630,
+    slug: 'afrique-de-l-est',
+    name: "Afrique de l'Est",
+  },
+  {
+    id: 1631,
+    slug: 'afrique-du-nord',
+    name: 'Afrique du Nord',
+  },
+  {
+    id: 1632,
+    slug: 'afrique-du-sud',
+    name: 'Afrique Australe',
+  },
 ]
 
 export const imagePlaceholderBase64 = () => {
@@ -150,10 +135,10 @@ export const footerLinks = [
     })),
   },
   {
-    title: 'Pays',
-    links: pays.map((p) => ({
+    title: 'Zones',
+    links: zones.map((p) => ({
       label: p.name,
-      href: `/pays/${p.name}`,
+      href: `/zones/${p.slug}`,
     })),
   },
   {
