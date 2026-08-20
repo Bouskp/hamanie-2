@@ -2,7 +2,6 @@
 import Link from 'next/link'
 import { AspectRatio } from '@/components/ui/aspect-ratio'
 import { Card, CardContent, CardHeader } from '@/components/ui/card'
-import { Separator } from '@/components/ui/separator'
 import { CustomPagination } from '../rubriques/CustomPagination'
 import { formatMediaDate } from '@/lib/utils'
 import Image from 'next/image'
