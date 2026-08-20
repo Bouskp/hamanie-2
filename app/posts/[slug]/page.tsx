@@ -57,7 +57,7 @@ export async function generateMetadata({
 }
 
 export async function generateStaticParams() {
-  const response = await getPostsPaginated(1, 20)
+  const response = await getPostsPaginated(1, 100)
   const { data: posts } = response
   return posts.map((p) => ({
     slug: p.slug,
