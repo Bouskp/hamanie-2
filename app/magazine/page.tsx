@@ -65,7 +65,7 @@ export default async function MagPage({ searchParams }: Props) {
     <div className='max-w-7xl mx-auto px-4 py-8 font-sans antialiased text-gray-900'>
       <header className='mb-12 border-b border-gray-200 pb-6'>
         <h1 className='text-4xl font-extrabold tracking-tight md:text-5xl mb- uppercase'>
-          Hamanié Magazine
+          Hamaniè - le journal
         </h1>
         <p className='text-lg text-gray-500'>
           Retrouvez toutes nos éditions mensuelles et nos dossiers spéciaux.
@@ -86,7 +86,7 @@ export default async function MagPage({ searchParams }: Props) {
           </div>
           <div className='flex flex-col justify-center space-y-4'>
             <h2 className='text-3xl font-bold md:text-4xl'>
-              L'hebdomadaire des leaders et décideurs qui façonnent l'Afrique.
+              Le mensuel des leaders et décideurs qui façonnent l'Afrique.
             </h2>
 
             <span className='text-xs font-bold tracking-widest text-red-600 uppercase'>

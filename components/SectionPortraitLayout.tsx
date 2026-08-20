@@ -1,7 +1,7 @@
 'use client'
 
 import React from 'react'
-import { User, ArrowUpRight, Bookmark } from 'lucide-react'
+import { User, ArrowUpRight, Bookmark, ArrowRight } from 'lucide-react'
 import Link from 'next/link'
 
 interface FocalPoint {
@@ -25,13 +25,27 @@ export default function PortraitsGridBgLayout({ posts }: { posts: Post[] }) {
     <section className='bg-[#fcfbf9] text-zinc-900 py-16 px-4 sm:px-6 lg:px-8 font-sans'>
       <div className='max-w-7xl mx-auto'>
         {/* En-tête minimaliste de la section */}
-        <div className='flex flex-col mb-10 border-b border-zinc-200 pb-6'>
-          <h2
-            className='font-condensed text-2xl md:text-2xl font-bold uppercase
-        tracking-tight text-black group-hover:text-red-600 transition-colors'
+        <div className='flex items-end justify-between border-b border-gray-100 pb-3 mb-6 gap-4'>
+          <Link
+            href={`/rubrique/portraits-interviews`}
+            className='group flex items-center gap-2'
           >
-            Portraits
-          </h2>
+            <h2
+              className='font-condensed text-2
+                xl md:text-2xl font-bold uppercase tracking-tight text-black group-hover:text-red-600 transition-colors'
+            >
+              Portraits & Interviews
+            </h2>
+          </Link>
+
+          {/* Lien direct "Voir tout" vers /rubrique/[slug] */}
+          <Link
+            href={`/rubrique/portraits-interviews`}
+            className='inline-flex items-center gap-1.5 text-xs font-black uppercase tracking-wider text-gray-400 hover:text-red-600 transition-colors group'
+          >
+            <span>Voir tout</span>
+            <ArrowRight className='w-3.5 h-3.5 group-hover:translate-x-0.5 transition-transform' />
+          </Link>
         </div>
         {/* Grille Responsive de cartes à fond photo */}
         <div className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6'>

@@ -36,7 +36,7 @@ export const categories: Category[] = [
   { id: 971, slug: 'education-formation', title: 'Éducation & Formation' },
   { id: 609, slug: 'international', title: 'International' },
   { id: 1533, slug: 'idees-analyses', title: 'Idees & Analyses' },
-  { id: 1529, slug: 'portraits', title: 'Portraits' },
+  { id: 1529, slug: 'portraits-interviews', title: 'Portraits & Interviews' },
   {
     id: 1531,
     slug: 'dossiers-enquetes-decryptage"',

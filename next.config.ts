@@ -8,7 +8,7 @@ const nextConfig: NextConfig = {
     remotePatterns: [
       {
         protocol: 'https',
-        hostname: 'hamanie.news',
+        hostname: 'api.hamanie.news',
         pathname: '/wp-content/uploads/**',
       },
     ],

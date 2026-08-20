@@ -27,18 +27,26 @@ export default function SeriesEnquetesLayout(SeriesProps: SeriesProps) {
     <section className='bg-[#0b0b0b] text-white py-16 px-4 sm:px-6 lg:px-8 font-sans'>
       <div className='max-w-7xl mx-auto'>
         {/* En-tête de la section */}
-        <div className='flex flex-col sm:flex-row sm:items-end justify-between border-b border-zinc-800 pb-6 mb-10'>
-          <div>
-            <h2 className='text-3xl sm:text-4xl font-serif font-bold tracking-tight text-zinc-100'>
-              {SeriesProps.title}
-            </h2>
-          </div>
+        <div className='flex items-end justify-between border-b border-gray-100 pb-3 mb-6 gap-4'>
           <Link
-            href={SeriesProps.linkUrl}
-            className='group flex items-center gap-2 text-zinc-400 hover:text-white text-sm font-medium mt-4 sm:mt-0 transition-colors'
+            href={`/rubrique/dossiers-enquetes-decryptage`}
+            className='group flex items-center gap-2'
           >
-            Toutes les enquêtes
-            <ArrowRight className='w-4 h-4 transition-transform group-hover:translate-x-1' />
+            <h2
+              className='font-condensed text-2
+                xl md:text-2xl font-bold uppercase tracking-tight text-white group-hover:text-red-600 transition-colors'
+            >
+              Dossiers-Enquêtes-Décryptages
+            </h2>
+          </Link>
+
+          {/* Lien direct "Voir tout" vers /rubrique/[slug] */}
+          <Link
+            href={`/rubrique/dossiers-enquetes-decryptage`}
+            className='inline-flex items-center gap-1.5 text-xs font-black uppercase tracking-wider text-gray-400 hover:text-red-600 transition-colors group'
+          >
+            <span>Voir tout</span>
+            <ArrowRight className='w-3.5 h-3.5 group-hover:translate-x-0.5 transition-transform' />
           </Link>
         </div>
 

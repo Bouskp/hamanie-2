@@ -86,16 +86,24 @@ export default async function SectionRouter({
     case 'cards-immersive-scroll':
       return (
         <section className='my-16 border-t border-gray-100 pt-6 w-full'>
-          <div className='flex justify-between items-center mb-6 px-1'>
-            <h2
-              className='font-condensed text-2
-              xl md:text-2xl font-bold uppercase tracking-tight text-black group-hover:text-red-600 transition-colors'
+          <div className='flex items-end justify-between border-b border-gray-100 pb-3 mb-6 gap-4'>
+            <Link href={rubriqueUrl} className='group flex items-center gap-2'>
+              <h2
+                className='font-condensed text-2
+                xl md:text-2xl font-bold uppercase tracking-tight text-black group-hover:text-red-600 transition-colors'
+              >
+                {rubrique.title}
+              </h2>
+            </Link>
+
+            {/* Lien direct "Voir tout" vers /rubrique/[slug] */}
+            <Link
+              href={rubriqueUrl}
+              className='inline-flex items-center gap-1.5 text-xs font-black uppercase tracking-wider text-gray-400 hover:text-red-600 transition-colors group'
             >
-              {rubrique.title}
-            </h2>
-            <span className='text-xs font-condensed font-bold text-gray-400 uppercase tracking-widest hidden sm:block'>
-              Faire défiler &rarr;
-            </span>
+              <span>Voir tout</span>
+              <ArrowRight className='w-3.5 h-3.5 group-hover:translate-x-0.5 transition-transform' />
+            </Link>
           </div>
           <div className='relative w-full'>
             <div className='flex gap-6 overflow-x-auto scroll-smooth scrollbar-none overscroll-x-contain pb-4 -mx-4 px-4'>
@@ -789,13 +797,24 @@ export default async function SectionRouter({
       return (
         <section className='my-16 border-t border-gray-200 dark:border-gray-800 pt-6 w-full'>
           {/* En-tête minimaliste de la rubrique */}
-          <div className='flex justify-between items-center mb-6'>
-            <h2
-              className='font-condensed text-2
-              xl md:text-2xl font-bold uppercase tracking-tight text-black group-hover:text-red-600 transition-colors'
+          <div className='flex items-end justify-between border-b border-gray-100 pb-3 mb-6 gap-4'>
+            <Link href={rubriqueUrl} className='group flex items-center gap-2'>
+              <h2
+                className='font-condensed text-2
+                xl md:text-2xl font-bold uppercase tracking-tight text-black group-hover:text-red-600 transition-colors'
+              >
+                {rubrique.title}
+              </h2>
+            </Link>
+
+            {/* Lien direct "Voir tout" vers /rubrique/[slug] */}
+            <Link
+              href={rubriqueUrl}
+              className='inline-flex items-center gap-1.5 text-xs font-black uppercase tracking-wider text-gray-400 hover:text-red-600 transition-colors group'
             >
-              {rubrique.title}
-            </h2>
+              <span>Voir tout</span>
+              <ArrowRight className='w-3.5 h-3.5 group-hover:translate-x-0.5 transition-transform' />
+            </Link>
           </div>
 
           {/* Ligne de cartes horizontales asymétriques (1 colonne mobile, 3 sur ordi) */}
