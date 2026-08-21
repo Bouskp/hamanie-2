@@ -1,7 +1,8 @@
 import { Navbar } from '../components/navigation/navbar'
 import './styles/index.css'
 import { Inter, Lora, Roboto_Condensed } from 'next/font/google'
-import { cn } from '@/lib/utils'
+import { SpeedInsights } from '@vercel/speed-insights/next'
+import { Analytics } from '@vercel/analytics/next'
 import { Footer } from '@/components/footer'
 import StockTicker from '@/components/StockTicker'
 
@@ -44,6 +45,8 @@ export default function RootLayout({
         <Navbar />
         <main>{children}</main>
         <Footer />
+        <SpeedInsights />
+        <Analytics />
       </body>
     </html>
   )
