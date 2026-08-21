@@ -32,6 +32,7 @@ export async function POST(request: NextRequest) {
 
     revalidateTag(`post-${slug}`, 'max')
     revalidateTag('posts', 'max')
+    revalidateTag('wordpress', 'max')
 
     return NextResponse.json({ revalidated: true, now: Date.now() })
   } catch (err) {

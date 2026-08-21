@@ -37,7 +37,6 @@ export async function generateMetadata({
     title: seoTitle,
     description: seoDesc,
     alternates: {
-      // Évite le contenu dupliqué (Indispensable pour le SEO)
       canonical: `https://hamanie.news/${slug}`,
     },
     openGraph: {

@@ -30,13 +30,12 @@ export async function generateMetadata({
   const seoTitle = `${category.name} - l'actualité et les infos sur hamaniè`
   const seoDesc =
     category.description ||
-    `Suivez en temps réel toute l'actualité, les innovations, les rapports exclusifs et les dossiers de fond du secteur ${category.name}.`
+    `l'actualité à la lumière de l'Afrique-${category.name}.`
 
   return {
     title: seoTitle,
     description: seoDesc,
     alternates: {
-      // Indispensable pour la pagination (?page=2) : pointe toujours vers la rubrique racine
       canonical: `https://hamanie.news/rubrique/${slug}`,
     },
     openGraph: {

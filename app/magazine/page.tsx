@@ -13,7 +13,7 @@ export const metadata: Metadata = {
     'Découvrez les grands entretiens, analyses de la transformation locale et enquêtes exclusives sur plusieurs domaines.',
   metadataBase: new URL('https://hamanie.news'),
   alternates: {
-    canonical: '/magazine', // Force l'URL principale pour éviter le contenu dupliqué
+    canonical: 'https://hamanie.news/magazine', // Force l'URL principale pour éviter le contenu dupliqué
   },
   openGraph: {
     title:
