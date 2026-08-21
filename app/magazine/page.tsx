@@ -63,11 +63,11 @@ export default async function MagPage({ searchParams }: Props) {
 
   return (
     <div className='max-w-7xl mx-auto px-4 py-8 font-sans antialiased text-gray-900'>
-      <header className='mb-12 border-b border-gray-200 pb-6'>
-        <h1 className='text-4xl font-extrabold tracking-tight md:text-5xl mb- uppercase'>
+      <header className='mb-6 border-b border-gray-200 pb-6'>
+        <h1 className='text-xl text-center font-extrabold tracking-tight md:text-5xl mb-2 uppercase'>
           Hamaniè - le journal
         </h1>
-        <p className='text-lg text-gray-500'>
+        <p className='text-sm md:text-lg text-center text-gray-500'>
           Retrouvez toutes nos éditions mensuelles et nos dossiers spéciaux.
         </p>
       </header>
@@ -85,20 +85,20 @@ export default async function MagPage({ searchParams }: Props) {
             />
           </div>
           <div className='flex flex-col justify-center space-y-4'>
-            <h2 className='text-3xl font-bold md:text-4xl'>
+            <h2 className='text-lg font-bold md:text-4xl'>
               Le mensuel des leaders et décideurs qui façonnent l'Afrique.
             </h2>
 
             <span className='text-xs font-bold tracking-widest text-red-600 uppercase'>
               Dernier numéro en kiosque
             </span>
-            <h2 className='text-3xl font-bold md:text-4xl'>
-              {`Hamaniè ${latestMag?.acf?.numero_magazine}`}
+            <h2 className='text-2xl text-center md:text-left font-bold md:text-4xl'>
+              {`Hamaniè #${latestMag?.acf?.numero_magazine}`}
             </h2>
-            <div className='pt-4'>
+            <div className='pt-4 flex items-center justify-center md:justify-start'>
               <Link
                 href={latestMag.acf.lien_}
-                className='inline-flex items-center justify-center px-6 py-3 border border-transparent text-base font-medium rounded-md text-white bg-black hover:bg-gray-800 transition-colors'
+                className='inline-flex px-6 py-3 border border-transparent text-base font-medium rounded-md text-white bg-black hover:bg-gray-800 transition-colors'
               >
                 Lire le mag
               </Link>

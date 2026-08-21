@@ -148,7 +148,7 @@ export const footerLinks = [
   {
     title: 'Services',
     links: [
-      { label: 'Newsletter', href: '/newsletter' },
+      { label: 'Newsletter', href: '/abonnement' },
       { label: 'Boutique / Magazines', href: '/magazines' },
     ],
   },
@@ -166,45 +166,45 @@ export const footerLinks = [
 export const RsLinksMianMedia = [
   {
     nom: 'facebook',
-    url: '',
+    url: 'https://www.facebook.com/p/Mian-Media-100076159819183/',
   },
   {
     nom: 'X(twitter)',
-    url: '',
+    url: 'https://x.com/mianmedia22',
   },
   {
     nom: 'youTube',
-    url: '',
+    url: 'https://www.youtube.com/@mian_media',
   },
   {
     nom: 'instagram',
-    url: '',
+    url: 'https://www.instagram.com/mian.media/',
   },
   {
     nom: 'linkedin',
-    url: '',
+    url: 'https://fr.linkedin.com/company/mianmediacom',
   },
 ]
 
 export const RsLinksHamanie = [
   {
     nom: 'facebook',
-    url: '',
+    url: 'https://www.facebook.com/hamanienews/',
   },
   {
     nom: 'X(twitter)',
-    url: '',
+    url: 'https://x.com/mianmedia22',
   },
   {
     nom: 'youTube',
-    url: '',
+    url: 'https://www.youtube.com/@mian_media',
   },
   {
     nom: 'instagram',
-    url: '',
+    url: 'https://www.instagram.com/hamanie.news/',
   },
   {
     nom: 'linkedin',
-    url: '',
+    url: 'https://fr.linkedin.com/company/mianmediacom',
   },
 ]

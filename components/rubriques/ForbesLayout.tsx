@@ -5,6 +5,7 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { Badge } from '@/components/ui/badge'
 import { CustomPagination } from '../rubriques//CustomPagination'
 import { cleanWordPressExcerpt, formatHtml, formatMediaDate } from '@/lib/utils'
+import Image from 'next/image'
 
 interface Post {
   id: string
@@ -73,7 +74,7 @@ export function ForbesLayout({
                 </Badge>
               )}
               <h2
-                className='text-3xl font-black tracking-tight leading-tight group-hover:text-red-600  decoration-2'
+                className='text-xl md:text-3xl font-black tracking-tight leading-tight group-hover:text-red-600  decoration-2'
                 dangerouslySetInnerHTML={{
                   __html: formatHtml(mainFeature.title),
                 }}
@@ -144,11 +145,12 @@ export function ForbesLayout({
                   className='flex flex-col sm:flex-row gap-6'
                 >
                   {post.image && (
-                    <div className='w-full sm:w-44 h-28 shrink-0 relative overflow-hidden rounded-md bg-neutral-50 border border-neutral-100'>
-                      <img
+                    <div className='w-full aspect-[1/1] md:aspect-[3/4] shrink-0 relative overflow-hidden rounded-md bg-neutral-50 border border-neutral-100'>
+                      <Image
                         src={post.image}
                         alt=''
-                        className='object-cover w-full h-full'
+                        className='object-cover'
+                        fill
                       />
                     </div>
                   )}

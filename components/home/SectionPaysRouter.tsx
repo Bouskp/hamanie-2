@@ -18,7 +18,7 @@ export default async function SectionPaysRouter({
   if (!zoneTrouve) return notFound()
 
   // 2. Requête API WordPress optimisée (On demande uniquement 5 articles pour la mosaïque)
-  const postsPerPage = 5
+  const postsPerPage = 6
   const currentPage = 1
 
   let articlesFormatted = []
@@ -64,7 +64,7 @@ export default async function SectionPaysRouter({
     return null // Évite de faire planter toute la page d'accueil si l'API WordPress est temporairement indisponible
   }
 
-  const countryConfig = {
+  const zoneConfig = {
     id: zoneTrouve.id,
     name: zoneTrouve.name,
     slug: zoneTrouve.slug,
@@ -74,7 +74,7 @@ export default async function SectionPaysRouter({
   return (
     <SectionMosaiquePaysAccueil
       articles={articlesFormatted}
-      country={countryConfig}
+      zone={zoneConfig}
     />
   )
 }

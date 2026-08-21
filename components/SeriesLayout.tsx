@@ -24,26 +24,22 @@ interface SeriesProps {
 }
 export default function SeriesEnquetesLayout(SeriesProps: SeriesProps) {
   return (
-    <section className='bg-[#0b0b0b] text-white py-16 px-4 sm:px-6 lg:px-8 font-sans'>
+    <section className='bg-[#0b0b0b] text-white py-6 px-4 sm:px-6 lg:px-8 font-sans'>
       <div className='max-w-7xl mx-auto'>
-        {/* En-tête de la section */}
-        <div className='flex items-end justify-between border-b border-gray-100 pb-3 mb-6 gap-4'>
+        <div className='flex items-center justify-between border-b border-gray-100 pb-3 mb-6 gap-4'>
           <Link
-            href={`/rubrique/dossiers-enquetes-decryptage`}
+            href={SeriesProps.linkUrl}
             className='group flex items-center gap-2'
           >
-            <h2
-              className='font-condensed text-2
-                xl md:text-2xl font-bold uppercase tracking-tight text-white group-hover:text-red-600 transition-colors'
-            >
-              Dossiers-Enquêtes-Décryptages
+            <h2 className='font-condensed text-xl md:text-2xl font-bold uppercase tracking-tight text-white group-hover:text-red-600 transition-colors'>
+              {SeriesProps.title}
             </h2>
           </Link>
 
           {/* Lien direct "Voir tout" vers /rubrique/[slug] */}
           <Link
-            href={`/rubrique/dossiers-enquetes-decryptage`}
-            className='inline-flex items-center gap-1.5 text-xs font-black uppercase tracking-wider text-gray-400 hover:text-red-600 transition-colors group'
+            href={SeriesProps.linkUrl}
+            className='hidden text-gray-400 md:inline-flex items-center gap-1.5 text-xs font-black uppercase tracking-wider  hover:text-red-600 transition-colors group'
           >
             <span>Voir tout</span>
             <ArrowRight className='w-3.5 h-3.5 group-hover:translate-x-0.5 transition-transform' />

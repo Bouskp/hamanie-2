@@ -42,7 +42,7 @@ export default async function SectionRouter({
   rubrique,
   layout,
 }: SectionRouterProps) {
-  const { data: posts } = await getPostsByCategoryPaginated(rubrique.id, 1, 6)
+  const { data: posts } = await getPostsByCategoryPaginated(rubrique.id, 1, 8)
   const postRendered = posts.map((post) => ({
     ...post,
     id: post.id.toString(),
@@ -86,12 +86,9 @@ export default async function SectionRouter({
     case 'cards-immersive-scroll':
       return (
         <section className='my-16 border-t border-gray-100 pt-6 w-full'>
-          <div className='flex items-end justify-between border-b border-gray-100 pb-3 mb-6 gap-4'>
+          <div className='flex items-center justify-between border-b border-gray-100 pb-3 mb-6 gap-4'>
             <Link href={rubriqueUrl} className='group flex items-center gap-2'>
-              <h2
-                className='font-condensed text-2
-                xl md:text-2xl font-bold uppercase tracking-tight text-black group-hover:text-red-600 transition-colors'
-              >
+              <h2 className='font-condensed text-xl md:text-2xl font-bold uppercase tracking-tight text-black group-hover:text-red-600 transition-colors'>
                 {rubrique.title}
               </h2>
             </Link>
@@ -99,34 +96,32 @@ export default async function SectionRouter({
             {/* Lien direct "Voir tout" vers /rubrique/[slug] */}
             <Link
               href={rubriqueUrl}
-              className='inline-flex items-center gap-1.5 text-xs font-black uppercase tracking-wider text-gray-400 hover:text-red-600 transition-colors group'
+              className='hidden text-gray-400 md:inline-flex items-center gap-1.5 text-xs font-black uppercase tracking-wider  hover:text-red-600 transition-colors group'
             >
               <span>Voir tout</span>
               <ArrowRight className='w-3.5 h-3.5 group-hover:translate-x-0.5 transition-transform' />
             </Link>
           </div>
           <div className='relative w-full'>
-            <div className='flex gap-6 overflow-x-auto scroll-smooth scrollbar-none overscroll-x-contain pb-4 -mx-4 px-4'>
+            <div className='flex gap-6 overflow-x-auto scroll-smooth snap-x snap-mandatory scrollbar-none overscroll-x-contain pb-4 -mx-4 px-4'>
               {postRendered.map((post) => {
                 return (
                   <div
                     key={post.id}
-                    className='min-w-[290px] w-[290px] sm:min-w-[340px] sm:w-[340px] aspect-[3/4] relative rounded-2xl overflow-hidden border border-gray-200/50 bg-gray-950 shadow-md group shrink-0'
+                    className='min-w-[300px] w-[290px] sm:min-w-[340px] sm:w-[340px] aspect-[3/4] relative rounded-2xl overflow-hidden border border-gray-200/50 bg-gray-950 shadow-md group shrink-0 snap-start'
                   >
-                    {
-                      <Image
-                        src={post.featuredImage}
-                        alt={post.title}
-                        fill
-                        sizes='(max-w-768px) 100vw, 33vw'
-                        className={`object-cover opacity-70 group-hover:scale-105 transition-transform duration-500 ease-out object`}
-                        style={{
-                          objectPosition: post.focal_point
-                            ? `${post.focal_point.x} ${post.focal_point.y}`
-                            : '50% 50%',
-                        }}
-                      />
-                    }
+                    <Image
+                      src={post.featuredImage}
+                      alt={post.title}
+                      fill
+                      sizes='(max-w-768px) 100vw, 33vw'
+                      className='object-cover opacity-70 group-hover:scale-105 transition-transform duration-500 ease-out'
+                      style={{
+                        objectPosition: post.focal_point
+                          ? `${post.focal_point.x} ${post.focal_point.y}`
+                          : '50% 50%',
+                      }}
+                    />
                     <div className='absolute inset-0 bg-gradient-to-t from-black via-black/40 to-transparent' />
                     <div className='absolute inset-x-0 bottom-0 p-6 space-y-2 flex flex-col justify-end text-white'>
                       <span className='font-condensed text-xs font-black uppercase tracking-widest text-red-500'>
@@ -154,12 +149,9 @@ export default async function SectionRouter({
 
       return (
         <section className='border-t-2 border-gray-900 pt-6 mb-16'>
-          <div className='flex items-end justify-between border-b border-gray-100 pb-3 mb-6 gap-4'>
+          <div className='flex items-center justify-between border-b border-gray-100 pb-3 mb-6 gap-4'>
             <Link href={rubriqueUrl} className='group flex items-center gap-2'>
-              <h2
-                className='font-condensed text-2
-                xl md:text-2xl font-bold uppercase tracking-tight text-black group-hover:text-red-600 transition-colors'
-              >
+              <h2 className='font-condensed text-xl md:text-2xl font-bold uppercase tracking-tight text-black group-hover:text-red-600 transition-colors'>
                 {rubrique.title}
               </h2>
             </Link>
@@ -167,7 +159,7 @@ export default async function SectionRouter({
             {/* Lien direct "Voir tout" vers /rubrique/[slug] */}
             <Link
               href={rubriqueUrl}
-              className='inline-flex items-center gap-1.5 text-xs font-black uppercase tracking-wider text-gray-400 hover:text-red-600 transition-colors group'
+              className='hidden text-gray-400 md:inline-flex items-center gap-1.5 text-xs font-black uppercase tracking-wider  hover:text-red-600 transition-colors group'
             >
               <span>Voir tout</span>
               <ArrowRight className='w-3.5 h-3.5 group-hover:translate-x-0.5 transition-transform' />
@@ -234,12 +226,9 @@ export default async function SectionRouter({
       const [bigPost, ...sidePosts] = postRendered
       return (
         <section className='border-t border-gray-950 pt-6 mb-16'>
-          <div className='flex items-end justify-between border-b border-gray-100 pb-3 mb-6 gap-4'>
+          <div className='flex items-center justify-between border-b border-gray-100 pb-3 mb-6 gap-4'>
             <Link href={rubriqueUrl} className='group flex items-center gap-2'>
-              <h2
-                className='font-condensed text-2
-              xl md:text-2xl font-bold uppercase tracking-tight text-black group-hover:text-red-600 transition-colors'
-              >
+              <h2 className='font-condensed text-xl md:text-2xl font-bold uppercase tracking-tight text-black group-hover:text-red-600 transition-colors'>
                 {rubrique.title}
               </h2>
             </Link>
@@ -247,7 +236,7 @@ export default async function SectionRouter({
             {/* Lien direct "Voir tout" vers /rubrique/[slug] */}
             <Link
               href={rubriqueUrl}
-              className='inline-flex items-center gap-1.5 text-xs font-black uppercase tracking-wider text-gray-400 hover:text-red-600 transition-colors group'
+              className='hidden text-gray-400 md:inline-flex items-center gap-1.5 text-xs font-black uppercase tracking-wider  hover:text-red-600 transition-colors group'
             >
               <span>Voir tout</span>
               <ArrowRight className='w-3.5 h-3.5 group-hover:translate-x-0.5 transition-transform' />
@@ -325,12 +314,9 @@ export default async function SectionRouter({
     case 'ligne-dense':
       return (
         <section className='border-gray-200 bg-gray-50/50 py-8 px-6 my-16 rounded-xl'>
-          <div className='flex items-end justify-between border-b border-gray-100 pb-3 mb-6 gap-4'>
+          <div className='flex items-center justify-between border-b border-gray-100 pb-3 mb-6 gap-4'>
             <Link href={rubriqueUrl} className='group flex items-center gap-2'>
-              <h2
-                className='font-condensed text-2
-              xl md:text-2xl font-bold uppercase tracking-tight text-black group-hover:text-red-600 transition-colors'
-              >
+              <h2 className='font-condensed text-xl md:text-2xl font-bold uppercase tracking-tight text-black group-hover:text-red-600 transition-colors'>
                 {rubrique.title}
               </h2>
             </Link>
@@ -338,14 +324,14 @@ export default async function SectionRouter({
             {/* Lien direct "Voir tout" vers /rubrique/[slug] */}
             <Link
               href={rubriqueUrl}
-              className='inline-flex items-center gap-1.5 text-xs font-black uppercase tracking-wider text-gray-400 hover:text-red-600 transition-colors group'
+              className='hidden text-gray-400 md:inline-flex items-center gap-1.5 text-xs font-black uppercase tracking-wider  hover:text-red-600 transition-colors group'
             >
               <span>Voir tout</span>
               <ArrowRight className='w-3.5 h-3.5 group-hover:translate-x-0.5 transition-transform' />
             </Link>
           </div>
           <div className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 divide-y sm:divide-y-0 sm:gap-x-8'>
-            {postRendered.slice(0, 4).map((post, idx) => (
+            {postRendered.slice(0, 6).map((post, idx) => (
               <div
                 key={post.id}
                 className={`pt-4 sm:pt-0 ${idx > 0 ? 'lg:border-l lg:pl-6 border-gray-200' : ''}`}
@@ -378,12 +364,9 @@ export default async function SectionRouter({
 
       return (
         <section className='border-t border-gray-300 pt-6 mb-16'>
-          <div className='flex items-end justify-between border-b border-gray-100 pb-3 mb-6 gap-4'>
+          <div className='flex items-center justify-between border-b border-gray-100 pb-3 mb-6 gap-4'>
             <Link href={rubriqueUrl} className='group flex items-center gap-2'>
-              <h2
-                className='font-condensed 
-              text-2xl md:text-2xl font-bold uppercase tracking-tight text-black group-hover:text-red-600 transition-colors'
-              >
+              <h2 className='font-condensed text-xl md:text-2xl font-bold uppercase tracking-tight text-black group-hover:text-red-600 transition-colors'>
                 {rubrique.title}
               </h2>
             </Link>
@@ -391,7 +374,7 @@ export default async function SectionRouter({
             {/* Lien direct "Voir tout" vers /rubrique/[slug] */}
             <Link
               href={rubriqueUrl}
-              className='inline-flex items-center gap-1.5 text-xs font-black uppercase tracking-wider text-gray-400 hover:text-red-600 transition-colors group'
+              className='hidden text-gray-400 md:inline-flex items-center gap-1.5 text-xs font-black uppercase tracking-wider  hover:text-red-600 transition-colors group'
             >
               <span>Voir tout</span>
               <ArrowRight className='w-3.5 h-3.5 group-hover:translate-x-0.5 transition-transform' />
@@ -442,13 +425,10 @@ export default async function SectionRouter({
     //
     case 'opinions':
       return (
-        <section className='bg-amber-50/60 dark:bg-amber-950/10 border-y border-amber-200/70 dark:border-amber-900/30 py-10 px-6 my-16 rounded-2xl shadow-xs'>
-          <div className='flex items-end justify-between border-b border-gray-100 pb-3 mb-6 gap-4'>
+        <section className='bg-amber-50/60 dark:bg-amber-950/10 border-y border-amber-200/70 dark:border-amber-900/30 py-10 px-6 my-6 rounded-2xl shadow-xs'>
+          <div className='flex items-center justify-between border-b border-gray-100 pb-3 mb-6 gap-4'>
             <Link href={rubriqueUrl} className='group flex items-center gap-2'>
-              <h2
-                className='font-condensed text-2
-                xl md:text-2xl font-bold uppercase tracking-tight text-black group-hover:text-red-600 transition-colors'
-              >
+              <h2 className='font-condensed text-xl md:text-2xl font-bold uppercase tracking-tight text-black group-hover:text-red-600 transition-colors'>
                 {rubrique.title}
               </h2>
             </Link>
@@ -456,7 +436,7 @@ export default async function SectionRouter({
             {/* Lien direct "Voir tout" vers /rubrique/[slug] */}
             <Link
               href={rubriqueUrl}
-              className='inline-flex items-center gap-1.5 text-xs font-black uppercase tracking-wider text-gray-400 hover:text-red-600 transition-colors group'
+              className='hidden text-gray-400 md:inline-flex items-center gap-1.5 text-xs font-black uppercase tracking-wider  hover:text-red-600 transition-colors group'
             >
               <span>Voir tout</span>
               <ArrowRight className='w-3.5 h-3.5 group-hover:translate-x-0.5 transition-transform' />
@@ -504,14 +484,11 @@ export default async function SectionRouter({
 
     case 'grid-3':
       return (
-        <section className='border-t border-gray-200 pt-6 mb-16 w-full'>
+        <section className='border-t border-gray-200 pt-6 mb-4 w-full'>
           {/* En-tête épuré de la rubrique */}
-          <div className='flex items-end justify-between border-b border-gray-100 pb-3 mb-6 gap-4'>
+          <div className='flex items-center justify-between border-b border-gray-100 pb-3 mb-6 gap-4'>
             <Link href={rubriqueUrl} className='group flex items-center gap-2'>
-              <h2
-                className='font-condensed text-2
-                xl md:text-2xl font-bold uppercase tracking-tight text-black group-hover:text-red-600 transition-colors'
-              >
+              <h2 className='font-condensed text-xl md:text-2xl font-bold uppercase tracking-tight text-black group-hover:text-red-600 transition-colors'>
                 {rubrique.title}
               </h2>
             </Link>
@@ -519,7 +496,7 @@ export default async function SectionRouter({
             {/* Lien direct "Voir tout" vers /rubrique/[slug] */}
             <Link
               href={rubriqueUrl}
-              className='inline-flex items-center gap-1.5 text-xs font-black uppercase tracking-wider text-gray-400 hover:text-red-600 transition-colors group'
+              className='hidden text-gray-400 md:inline-flex items-center gap-1.5 text-xs font-black uppercase tracking-wider  hover:text-red-600 transition-colors group'
             >
               <span>Voir tout</span>
               <ArrowRight className='w-3.5 h-3.5 group-hover:translate-x-0.5 transition-transform' />
@@ -528,7 +505,7 @@ export default async function SectionRouter({
 
           {/* Grille symétrique stricte sur 3 colonnes */}
           <div className='grid grid-cols-1 md:grid-cols-3 gap-x-6 gap-y-8'>
-            {postRendered.slice(0, 5).map((post) => {
+            {postRendered.slice(0, 6).map((post) => {
               const image = post.featuredImage
               return (
                 <div key={post.id} className='space-y-3 flex flex-col group'>
@@ -560,7 +537,7 @@ export default async function SectionRouter({
                     {/* Titre de l'article en police Serif journalistique */}
                     <Link href={`/posts/${post.slug}`} className='block'>
                       <h3
-                        className='text-condensed text-base font-bold text-gray-950 group-hover:text-red-600 transition-colors leading-snug line-clamp-3'
+                        className='text-condensed text-sm md:text-base font-bold text-gray-950 group-hover:text-red-600 transition-colors leading-snug line-clamp-3'
                         dangerouslySetInnerHTML={{
                           __html: formatHtml(post.title),
                         }}
@@ -578,13 +555,9 @@ export default async function SectionRouter({
     case 'bento':
       return (
         <section className='my-16 border-t border-gray-100 pt-6 w-full'>
-          {/* En-tête épuré */}
-          <div className='flex items-end justify-between border-b border-gray-100 pb-3 mb-6 gap-4'>
+          <div className='flex items-center justify-between border-b border-gray-100 pb-3 mb-6 gap-4'>
             <Link href={rubriqueUrl} className='group flex items-center gap-2'>
-              <h2
-                className='font-condensed text-2
-                xl md:text-2xl font-bold uppercase tracking-tight text-black group-hover:text-red-600 transition-colors'
-              >
+              <h2 className='font-condensed text-xl md:text-2xl font-bold uppercase tracking-tight text-black group-hover:text-red-600 transition-colors'>
                 {rubrique.title}
               </h2>
             </Link>
@@ -592,7 +565,7 @@ export default async function SectionRouter({
             {/* Lien direct "Voir tout" vers /rubrique/[slug] */}
             <Link
               href={rubriqueUrl}
-              className='inline-flex items-center gap-1.5 text-xs font-black uppercase tracking-wider text-gray-400 hover:text-red-600 transition-colors group'
+              className='hidden text-gray-400 md:inline-flex items-center gap-1.5 text-xs font-black uppercase tracking-wider  hover:text-red-600 transition-colors group'
             >
               <span>Voir tout</span>
               <ArrowRight className='w-3.5 h-3.5 group-hover:translate-x-0.5 transition-transform' />
@@ -679,14 +652,10 @@ export default async function SectionRouter({
       const [leftPost, centerPost, rightPost] = postRendered
       const image = centerPost.featuredImage
       return (
-        <section className='border-y border-gray-200 dark:border-gray-800 py-12 my-16 w-full bg-white dark:bg-transparent'>
-          {/* Titre de la rubrique centré */}
-          <div className='flex items-end justify-between border-b border-gray-100 pb-3 mb-6 gap-4'>
+        <section className='border-y border-gray-200 dark:border-gray-800 py-12 my-6 w-full bg-white dark:bg-transparent'>
+          <div className='flex items-center justify-between border-b border-gray-100 pb-3 mb-6 gap-4'>
             <Link href={rubriqueUrl} className='group flex items-center gap-2'>
-              <h2
-                className='font-condensed text-2
-              xl md:text-2xl font-bold uppercase tracking-tight text-black group-hover:text-red-600 transition-colors'
-              >
+              <h2 className='font-condensed text-xl md:text-2xl font-bold uppercase tracking-tight text-black group-hover:text-red-600 transition-colors'>
                 {rubrique.title}
               </h2>
             </Link>
@@ -694,7 +663,7 @@ export default async function SectionRouter({
             {/* Lien direct "Voir tout" vers /rubrique/[slug] */}
             <Link
               href={rubriqueUrl}
-              className='inline-flex items-center gap-1.5 text-xs font-black uppercase tracking-wider text-gray-400 hover:text-red-600 transition-colors group'
+              className='hidden text-gray-400 md:inline-flex items-center gap-1.5 text-xs font-black uppercase tracking-wider  hover:text-red-600 transition-colors group'
             >
               <span>Voir tout</span>
               <ArrowRight className='w-3.5 h-3.5 group-hover:translate-x-0.5 transition-transform' />
@@ -795,14 +764,10 @@ export default async function SectionRouter({
 
     case 'ephemeride':
       return (
-        <section className='my-16 border-t border-gray-200 dark:border-gray-800 pt-6 w-full'>
-          {/* En-tête minimaliste de la rubrique */}
-          <div className='flex items-end justify-between border-b border-gray-100 pb-3 mb-6 gap-4'>
+        <section className='my-6 border-t border-gray-200 dark:border-gray-800 pt-6 w-full'>
+          <div className='flex items-center justify-between border-b border-gray-100 pb-3 mb-6 gap-4'>
             <Link href={rubriqueUrl} className='group flex items-center gap-2'>
-              <h2
-                className='font-condensed text-2
-                xl md:text-2xl font-bold uppercase tracking-tight text-black group-hover:text-red-600 transition-colors'
-              >
+              <h2 className='font-condensed text-xl md:text-2xl font-bold uppercase tracking-tight text-black group-hover:text-red-600 transition-colors'>
                 {rubrique.title}
               </h2>
             </Link>
@@ -810,7 +775,7 @@ export default async function SectionRouter({
             {/* Lien direct "Voir tout" vers /rubrique/[slug] */}
             <Link
               href={rubriqueUrl}
-              className='inline-flex items-center gap-1.5 text-xs font-black uppercase tracking-wider text-gray-400 hover:text-red-600 transition-colors group'
+              className='hidden text-gray-400 md:inline-flex items-center gap-1.5 text-xs font-black uppercase tracking-wider  hover:text-red-600 transition-colors group'
             >
               <span>Voir tout</span>
               <ArrowRight className='w-3.5 h-3.5 group-hover:translate-x-0.5 transition-transform' />

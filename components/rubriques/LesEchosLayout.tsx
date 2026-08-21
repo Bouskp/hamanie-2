@@ -2,7 +2,6 @@
 import Link from 'next/link'
 import { AspectRatio } from '@/components/ui/aspect-ratio'
 import { Separator } from '@/components/ui/separator'
-import { Badge } from '@/components/ui/badge'
 import { CustomPagination } from '../rubriques//CustomPagination'
 import {
   calculateReadingTime,
@@ -48,7 +47,7 @@ export function LesEchosLayout({
   const bottomGridArticles = articles.slice(9) // Le reste du flux sectoriel
 
   return (
-    <main className='max-w-7xl mx-auto px-4 py-6 bg-white text-slate-900 antialiased selection:bg-sky-100'>
+    <main className='max-w-7xl mx-auto px-4 py-2 bg-white text-slate-900 antialiased'>
       {/* 1. En-tête Corporate du Secteur */}
       <div className='flex items-center gap-3 mb-6 border-b border-slate-200 pb-3'>
         {/* L'accent couleur Échos */}
@@ -80,7 +79,7 @@ export function LesEchosLayout({
                   />
 
                   <p
-                    className='text-slate-500 text-xs line-clamp-3 font-normal leading-relaxed'
+                    className='hidden text-slate-500 text-sm md:line-clamp-3 font-normal leading-relaxed'
                     dangerouslySetInnerHTML={{
                       __html: cleanWordPressExcerpt(post.excerpt),
                     }}
@@ -129,7 +128,7 @@ export function LesEchosLayout({
                 />
 
                 <p
-                  className='text-slate-600 text-sm font-normal leading-relaxed'
+                  className='text-slate-600 text-sm font-normal leading-relaxed line-clamp-3'
                   dangerouslySetInnerHTML={{
                     __html: formatHtml(mainArticle.excerpt),
                   }}
@@ -182,17 +181,17 @@ export function LesEchosLayout({
           {bottomGridArticles.map((post) => (
             <article
               key={post.id}
-              className='group flex gap-4 pb-6 border-b border-slate-100 last:border-none last:pb-0'
+              className='group flex align-center gap-4 pb-6 border-b border-slate-100 last:border-none last:pb-0'
             >
               <div className='flex-1 space-y-1.5'>
                 <Link href={post.path}>
                   <h4
-                    className='font-condensed text-xl font-bold leading-snug group-hover:text-red-600 transition-colors line-clamp-2'
+                    className='font-condensed text-base md:text-xl font-bold leading-snug group-hover:text-red-600 transition-colors line-clamp-2'
                     dangerouslySetInnerHTML={{ __html: formatHtml(post.title) }}
                   />
                 </Link>
                 <p
-                  className='text-gray-800 text-sm font-normal line-clamp-2 leading-relaxed'
+                  className='hidden  text-gray-800 text-sm font-normal md:line-clamp-2 leading-relaxed'
                   dangerouslySetInnerHTML={{
                     __html: cleanWordPressExcerpt(post.excerpt),
                   }}
@@ -203,12 +202,12 @@ export function LesEchosLayout({
                 </p>
               </div>
               {post.image && (
-                <div className='w-28 h-20 shrink-0 relative overflow-hidden rounded-xs border border-slate-100'>
+                <div className='aspect-[1/1] shrink-0 relative overflow-hidden rounded-xs border border-slate-100'>
                   <Image
                     src={post.image}
                     alt={post.title}
                     fill
-                    className='object-cover w-full h-full'
+                    className='object-cover'
                     style={{
                       objectPosition: post.focalPoint
                         ? `${post.focalPoint.x} ${post.focalPoint.y}`

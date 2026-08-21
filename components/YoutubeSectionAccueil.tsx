@@ -66,7 +66,7 @@ export default function YoutubeSectionAccueil() {
     <section className='w-full bg-[#111] text-white py-14 my-12 border-y-4 border-red-600 antialiased'>
       <div className='max-w-7xl mx-auto px-4'>
         {/* En-tête de la section Vidéo */}
-        <div className='border-b border-gray-800 pb-4 mb-8 flex flex-col sm:flex-row sm:items-end justify-between gap-4'>
+        <div className='border-b border-gray-800 pb-4 mb-8 flex items-center justify-center md:justify-between gap-4'>
           <div className='flex items-center gap-4'>
             {/* EMPLACEMENT DU LOGO DU MÉDIA / DE LA CHAÎNE */}
             <Link
@@ -86,7 +86,7 @@ export default function YoutubeSectionAccueil() {
             </Link>
 
             <div>
-              <h2 className='text-2xl font-black font-serif tracking-tight uppercase text-white'>
+              <h2 className='text-lg md:text-2xl font-black font-serif tracking-tight uppercase text-white'>
                 MIAN TV
               </h2>
             </div>
@@ -96,7 +96,7 @@ export default function YoutubeSectionAccueil() {
             href='https://www.youtube.com/@mian_media'
             target='_blank'
             rel='noopener noreferrer'
-            className='inline-flex items-center gap-1.5 text-xs font-bold uppercase tracking-wider text-gray-400 hover:text-red-500 transition-colors group'
+            className='hidden md:inline-flex items-center gap-1.5 text-xs font-bold uppercase tracking-wider text-gray-400 hover:text-red-500 transition-colors group'
           >
             <span>Chaîne YouTube</span>
             <ArrowRight className='w-3.5 h-3.5 group-hover:translate-x-0.5 transition-transform' />
@@ -106,9 +106,9 @@ export default function YoutubeSectionAccueil() {
         {/* Grille Principale asymétrique */}
         <div className='grid grid-cols-1 lg:grid-cols-12 gap-8'>
           {/* LECTEUR PRINCIPAL (7/12) */}
-          <div className='lg:col-span-7 flex flex-col justify-between'>
+          <div className='order-2 lg:order-1 lg:col-span-7 flex flex-col justify-between'>
             <div className='space-y-4'>
-              <div className='relative w-full aspect-video bg-black border border-gray-800 rounded-xs overflow-hidden'>
+              <div className='relative aspect-[4/3] sm:aspect-video bg-black border border-gray-800 rounded-xs overflow-hidden'>
                 <iframe
                   src={`https://www.youtube.com/embed/${videoActive.id}?autoplay=0&rel=0`}
                   title={videoActive.titre}
@@ -135,23 +135,32 @@ export default function YoutubeSectionAccueil() {
           </div>
 
           {/* LISTE DES VIDÉOS SECONDAIRES (5/12) */}
-          <div className='lg:col-span-5 flex flex-col border-t lg:border-t-0 lg:border-l border-gray-800 pt-6 lg:pt-0 lg:pl-6'>
+          <div className='order-1 lg:order-2 lg:col-span-5 flex flex-col pt-6 lg:pt-0 lg:pl-6'>
             <h4 className='text-[11px] font-black uppercase text-gray-500 tracking-wider mb-3'>
               Dernières vidéos
             </h4>
 
-            <div className='divide-y divide-gray-800/60 max-h-[420px] overflow-y-auto pr-2 scrollbar-thin scrollbar-thumb-gray-800'>
+            <div
+              className='
+        flex gap-4 overflow-x-auto snap-x snap-mandatory scroll-smooth scrollbar-none overscroll-x-contain pb-2 -mx-4 px-4
+        lg:flex-col lg:gap-0 lg:overflow-x-visible lg:snap-none lg:mx-0 lg:px-0 lg:pb-0 lg:divide-y lg:divide-gray-800/60 lg:max-h-[420px] lg:overflow-y-auto lg:pr-2 lg:scrollbar-thin lg:scrollbar-thumb-gray-800
+      '
+            >
               {videos.map((vid) => (
                 <button
                   key={vid.id}
                   onClick={() => setVideoActive(vid)}
-                  className={`w-full text-left py-3.5 flex gap-4 items-center group transition-all rounded-xs ${
-                    videoActive.id === vid.id
-                      ? 'bg-neutral-900/80 border-l-4 border-red-600 pl-3 -mx-2 pr-2'
-                      : 'hover:bg-neutral-900/30'
-                  }`}
+                  className={`
+            shrink-0 w-[220px] sm:w-[260px] lg:w-full
+            snap-start
+            text-left py-3.5 flex gap-4 items-center group transition-all rounded-xs
+            ${
+              videoActive.id === vid.id
+                ? 'bg-neutral-900/80 border-l-4 border-red-600 pl-3 -mx-2 pr-2'
+                : 'hover:bg-neutral-900/30'
+            }
+          `}
                 >
-                  {/* Miniature optimisée avec next/image */}
                   <div className='relative w-24 aspect-video bg-gray-800 shrink-0 border border-gray-700/50 flex items-center justify-center overflow-hidden rounded-xs'>
                     <Image
                       src={`https://img.youtube.com/vi/${vid.id}/hqdefault.jpg`}
@@ -179,7 +188,6 @@ export default function YoutubeSectionAccueil() {
                     </span>
                   </div>
 
-                  {/* Textes descriptifs courts juxtaposés */}
                   <div className='flex-1 min-w-0 space-y-1'>
                     <span className='text-[9px] font-bold text-gray-500 uppercase tracking-wider block'>
                       {vid.categorie}

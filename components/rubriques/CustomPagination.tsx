@@ -51,7 +51,7 @@ export function CustomPagination({
   const pageNumbers = getPageNumbers()
 
   return (
-    <Pagination className='my-12' aria-label='Navigation dans les articles'>
+    <Pagination className='my-6' aria-label='Navigation dans les articles'>
       <PaginationContent className='flex-wrap justify-center gap-1'>
         {/* BOUTON PRÉCÉDENT */}
         <PaginationItem>
@@ -64,9 +64,8 @@ export function CustomPagination({
                 ? 'pointer-events-none opacity-40 font-condensed uppercase text-xs font-black'
                 : 'font-condensed uppercase text-xs font-black hover:text-red-600 transition-colors'
             }
-          >
-            Précédent
-          </PaginationPrevious>
+            text='précédent'
+          ></PaginationPrevious>
         </PaginationItem>
 
         {/* PREMIÈRE PAGE (Toujours visible) */}
@@ -146,9 +145,8 @@ export function CustomPagination({
                 ? 'pointer-events-none opacity-40 font-condensed uppercase text-xs font-black'
                 : 'font-condensed uppercase text-xs font-black hover:text-red-600 transition-colors'
             }
-          >
-            Suivant
-          </PaginationNext>
+            text='Suivant'
+          ></PaginationNext>
         </PaginationItem>
       </PaginationContent>
     </Pagination>

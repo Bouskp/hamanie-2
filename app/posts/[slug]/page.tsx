@@ -134,6 +134,7 @@ export default async function PostPage({
         )}
 
         {/* Métadonnées de l'article */}
+        {/* Métadonnées de l'article */}
         <div className='flex flex-wrap items-center gap-y-2 gap-x-6 text-sm text-muted-foreground pt-2'>
           <div className='flex items-center gap-1.5 font-semibold'>
             <User className='h-4 w-4' />
@@ -151,8 +152,8 @@ export default async function PostPage({
           </div>
 
           {isModified && (
-            <div className='flex items-center gap-1.5 px-2 py-0.5 rounded text-xs font-medium'>
-              <RefreshCw className='h-3 w-3' />
+            <div className='flex items-center gap-1.5 font-semibold'>
+              <RefreshCw className='h-4 w-4' />
               <span>
                 Mis à jour le{' '}
                 {new Date(post.modified).toLocaleDateString('fr-FR', {
@@ -162,7 +163,7 @@ export default async function PostPage({
             </div>
           )}
 
-          <div className='flex items-center gap-1.5 ml-auto lg:ml-0 font-medium text-gray-600 dark:text-gray-400 font-semibold'>
+          <div className='flex items-center gap-1.5 font-semibold'>
             <Clock className='h-4 w-4' />
             <span>Lecture : {readingTime} min</span>
           </div>

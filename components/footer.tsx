@@ -76,10 +76,10 @@ export function LinkedinIcon({
 // Données de navigation typiques d'un grand site média
 export function Footer() {
   return (
-    <footer className='w-full bg-black text-gray-900 border-t-4 border-gray-900 mt-20 font-sans'>
-      <div className='max-w-7xl mx-auto px-4 py-12'>
+    <footer className='w-full bg-black text-white border-t-4 border-white/10 mt-6 font-sans'>
+      <div className='max-w-7xl mx-auto px-4 sm:px-6 py-10 sm:py-12'>
         {/* NIVEAU 1 : Identité et Réseaux sociaux */}
-        <div className='flex flex-col md:flex-row justify-between items-center border-b border-gray-200 pb-8 mb-8 gap-4'>
+        <div className='flex flex-col sm:flex-row justify-between items-center border-b border-white/10 pb-6 sm:pb-8 mb-6 sm:mb-8 gap-4'>
           {/* Logo style grand journal */}
           <Link
             href='/'
@@ -89,47 +89,55 @@ export function Footer() {
           </Link>
 
           {/* Liens vers les réseaux sociaux officiels */}
-          <div className='flex space-x-6 text-sm font-semibold text-white'>
-            <a
-              href={RsLinksHamanie.find((p) => p.nom.includes('twitter'))?.url}
+          <div className='flex flex-wrap justify-center gap-x-4 gap-y-2 sm:gap-x-6 text-base sm:text-base font-semibold text-white'>
+            <Link
+              href={
+                RsLinksHamanie.find((p) => p.nom.includes('twitter'))?.url || ''
+              }
               className='hover:text-red-600 transition-colors'
             >
               X (Twitter)
-            </a>
-            <a
-              href={RsLinksHamanie.find((p) => p.nom.includes('facebook'))?.url}
+            </Link>
+            <Link
+              href={
+                RsLinksHamanie.find((p) => p.nom.includes('facebook'))?.url ||
+                ''
+              }
               className='hover:text-red-600 transition-colors'
             >
               Facebook
-            </a>
-            <a
+            </Link>
+            <Link
               href={
-                RsLinksHamanie.find((p) => p.nom.includes('instagram'))?.url
+                RsLinksHamanie.find((p) => p.nom.includes('instagram'))?.url ||
+                ''
               }
               className='hover:text-red-600 transition-colors'
             >
               Instagram
-            </a>
-            <a
-              href={RsLinksHamanie.find((p) => p.nom.includes('youtube'))?.url}
+            </Link>
+            <Link
+              href={
+                RsLinksHamanie.find((p) => p.nom.includes('youTube'))?.url || ''
+              }
               className='hover:text-red-600 transition-colors'
             >
               YouTube
-            </a>
+            </Link>
           </div>
         </div>
 
-        <div className='flex flex-col md:flex-row justify-between items-center border-b border-gray-200 pb-8 mb-8 gap-4'>
+        <div className='flex flex-col sm:flex-row justify-between items-center border-b border-white/10 pb-6 sm:pb-8 mb-8 sm:mb-12 gap-4'>
           {/* Logo style grand journal */}
           <Link
-            href='/'
+            href='https://mianmedia.com/'
             className='font-serif text-2xl font-black tracking-tight text-white uppercase'
           >
             MIAN MEDIA
           </Link>
 
           {/* Liens vers les réseaux sociaux officiels */}
-          <div className='flex space-x-6 text-sm font-semibold text-white'>
+          <div className='flex flex-wrap justify-center gap-x-4 gap-y-2 sm:gap-x-6 text-base sm:text-base font-semibold text-white'>
             <a
               href={
                 RsLinksMianMedia.find((p) => p.nom.includes('twitter'))?.url
@@ -156,7 +164,7 @@ export function Footer() {
             </a>
             <a
               href={
-                RsLinksMianMedia.find((p) => p.nom.includes('youtube'))?.url
+                RsLinksMianMedia.find((p) => p.nom.includes('youTube'))?.url
               }
               className='hover:text-red-600 transition-colors'
             >
@@ -166,11 +174,11 @@ export function Footer() {
         </div>
 
         {/* NIVEAU 2 : Le Grand Maillage de Rubriques (Grille) */}
-        <div className='grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-8 mb-12'>
+        <div className='grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-6 sm:gap-8 mb-10 sm:mb-12'>
           {footerLinks.map((section, idx) => (
             <div key={idx} className='space-y-3'>
               {/* Titre en Roboto Condensed pour un effet dense et structuré */}
-              <h3 className='font-condensed text-xs font-black uppercase tracking-wider text-red-800'>
+              <h3 className='font-condensed text-xs font-black uppercase tracking-wider text-red-500'>
                 {section.title}
               </h3>
               <ul className='space-y-2'>
@@ -178,7 +186,7 @@ export function Footer() {
                   <li key={linkIdx}>
                     <Link
                       href={link.href}
-                      className='text-sm text-white hover:text-red-600 transition-colors font-medium leading-snug'
+                      className='text-xs sm:text-sm text-white/80 hover:text-red-600 transition-colors font-medium leading-snug'
                     >
                       {link.label}
                     </Link>
@@ -187,30 +195,15 @@ export function Footer() {
               </ul>
             </div>
           ))}
-
-          {/* Bloc d'appel à l'abonnement Premium (Style Le Monde) */}
-          {/* <div className='col-span-2 bg-gray-50 border border-gray-200 rounded-xl p-5 space-y-3 flex flex-col justify-between'>
-            <div className='space-y-1'>
-              <h4 className='font-serif text-lg font-bold text-gray-950'>
-                L'information de référence
-              </h4>
-              <p className='text-xs text-gray-600 leading-relaxed'>
-                Suivez l'actualité en continu, accédez à nos enquêtes exclusives
-                et lisez le magazine numérique chaque mois.
-              </p>
-            </div>
-            <Link
-              href='/abonnement'
-              className='block w-full bg-gray-950 hover:bg-red-600 text-white font-bold text-xs uppercase tracking-wider text-center py-3 rounded-lg transition-colors shadow-xs'
-            >
-              S'abonner dès 1€
-            </Link>
-          </div> */}
         </div>
 
         {/* NIVEAU 3 : Barre de conformité et Copyright légal */}
-        <div className='border-t border-gray-200 pt-6 flex flex-col md:flex-row justify-between items-center text-xs text-white gap-4'>
-          <div className='flex flex-wrap justify-center md:justify-start gap-x-4 gap-y-1'>
+        <div className='border-t border-white/10 pt-6 flex flex-col-reverse sm:flex-row justify-between items-center text-xs text-white gap-4'>
+          <p className='text-center md:text-right font-medium uppercase'>
+            © {new Date().getFullYear()} HAMANIè. Tous droits réservés.
+          </p>
+
+          <div className='flex flex-wrap justify-center gap-x-4 gap-y-1'>
             <Link href='/cgv' className='hover:underline'>
               CGV
             </Link>
@@ -224,10 +217,6 @@ export function Footer() {
               Plan du site
             </Link>
           </div>
-
-          <p className='text-center md:text-right font-medium uppercase'>
-            © {new Date().getFullYear()} HAMANIè. Tous droits réservés.
-          </p>
         </div>
       </div>
     </footer>

@@ -38,14 +38,14 @@ export default function HeroSlider({ posts }: { posts: SliderPost[] }) {
   if (!posts || posts.length === 0) return null
 
   return (
-    <section className='relative w-full overflow-hidden bg-gray-950 rounded-2xl my-6 shadow-sm border border-gray-100 dark:border-gray-900'>
+    <section className='relative w-full overflow-hidden bg-gray-950 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-900'>
       {/* Zone principale de défilement Embla */}
       <div className='overflow-hidden' ref={emblaRef}>
         <div className='flex'>
-          {posts.slice(0, 3).map((post, index) => (
+          {posts.slice(0, 4).map((post, index) => (
             <div
               key={index}
-              className='flex-[0_0_100%] min-w-0 relative aspect-[16/10] md:aspect-[21/9] w-full'
+              className='flex-[0_0_100%] min-w-0 relative aspect-[4/5] md:aspect-[16/9] w-full lg:aspect-[21/9]'
             >
               {/* Image d'arrière-plan avec dégradé opacifiant texturé */}
               {post.featuredImage && (
@@ -98,14 +98,14 @@ export default function HeroSlider({ posts }: { posts: SliderPost[] }) {
                     </span>
                   </span>
                   <span className='w-1 h-1 rounded-full bg-gray-500' />
-                  <span className='text-gray-300 font-normal normal-case font-sans'>
+                  <span className='text-gray-300  normal-case font-serif text-sm md:text-lg'>
                     {formatMediaDate(post.date)}
                   </span>
                 </div>
 
                 <Link href={`/posts/${post.slug}`} className='block group'>
                   <h1
-                    className='font-serif text-xl md:text-2xl lg:text-3xl font-black leading-tight tracking-tight group-hover:underline decoration-red-500 underline-offset-4 decoration-2 font-condensed'
+                    className='font-serif text-xl md:text-2xl lg:text-3xl font-black leading-tight tracking-tight group-hover:underline decoration-red-500 underline-offset-4 decoration-2 font-condensed flow-root'
                     dangerouslySetInnerHTML={{ __html: formatHtml(post.title) }}
                   />
                 </Link>

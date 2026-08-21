@@ -41,7 +41,7 @@ export function Navbar() {
           </div>
 
           {/* Logo Central / Gauche */}
-          <div className='absolute left-1/2 -translate-x-1/2 md:static md:translate-x-0'>
+          <div className='absolute left-1/4 -translate-x-1/2 md:static md:translate-x-0'>
             <Link
               href='/'
               className='font-serif text-xl md:text-3xl font-black tracking-tighter text-gray-950 uppercase'

@@ -32,18 +32,15 @@ export default function StartupArticlesRegistry(StatupProps: StatupProps) {
   const [featuredArticle, ...otherArticles] = StatupProps.posts
 
   return (
-    <section className='bg-slate-50 py-16 px-4 sm:px-6 lg:px-8'>
+    <section className='bg-slate-50 py-6 px-4 sm:px-6 lg:px-8'>
       <div className='max-w-7xl mx-auto'>
         {/* En-tête de la section des publications */}
-        <div className='flex items-end justify-between border-b border-gray-100 pb-3 mb-6 gap-4'>
+        <div className='flex items-center justify-between border-b border-gray-100 pb-3 mb-6 gap-4'>
           <Link
             href={StatupProps.linkUrl}
             className='group flex items-center gap-2'
           >
-            <h2
-              className='font-condensed text-2
-                xl md:text-2xl font-bold uppercase tracking-tight text-black group-hover:text-red-600 transition-colors'
-            >
+            <h2 className='font-condensed text-xl md:text-2xl font-bold uppercase tracking-tight text-black group-hover:text-red-600 transition-colors'>
               {StatupProps.title}
             </h2>
           </Link>
@@ -51,7 +48,7 @@ export default function StartupArticlesRegistry(StatupProps: StatupProps) {
           {/* Lien direct "Voir tout" vers /rubrique/[slug] */}
           <Link
             href={StatupProps.linkUrl}
-            className='inline-flex items-center gap-1.5 text-xs font-black uppercase tracking-wider text-gray-400 hover:text-red-600 transition-colors group'
+            className='hidden text-gray-400 md:inline-flex items-center gap-1.5 text-xs font-black uppercase tracking-wider  hover:text-red-600 transition-colors group'
           >
             <span>Voir tout</span>
             <ArrowRight className='w-3.5 h-3.5 group-hover:translate-x-0.5 transition-transform' />
@@ -84,7 +81,7 @@ export default function StartupArticlesRegistry(StatupProps: StatupProps) {
                     {/* <span>Par {featuredArticle.author}</span> */}
                     <span>{featuredArticle.date}</span>
                   </div>
-                  <h3 className='text-2xl font-bold text-slate-900 group-hover:text-red-500 transition-colors leading-tight'>
+                  <h3 className='text-xl md:text-2xl font-bold text-slate-900 group-hover:text-red-500 transition-colors leading-tight'>
                     <Link href={`/posts/${featuredArticle.slug}`}>
                       {featuredArticle.title}
                     </Link>

@@ -20,7 +20,7 @@ interface Post {
 
 interface SectionMosaiqueProps {
   articles: Post[]
-  country: {
+  zone: {
     name: string
     slug: string
     colorClass?: string // Ex: "border-orange-600 text-orange-600" pour la CI
@@ -29,7 +29,7 @@ interface SectionMosaiqueProps {
 
 export default function SectionMosaiquePaysAccueil({
   articles,
-  country,
+  zone,
 }: SectionMosaiqueProps) {
   // Sécurité : Il faut au moins des articles pour rendre le composant
   if (!articles || articles.length === 0) return null
@@ -38,33 +38,30 @@ export default function SectionMosaiquePaysAccueil({
   const leadArticle = articles[0] // 1er article : La grande Une
   const gridArticles = articles.slice(1, 5) // Les 4 articles secondaires à droite
 
-  const countryUrl = `/zones/${country.slug}`
+  const countryUrl = `/zones/${zone.slug}`
   // Petite astuce pour n'extraire QUE la classe de texte (ex: text-orange-600) ou de bordure
 
   return (
     <section
-      className={`border-t-2 border-neutral-900 pt-6 mb-16 antialiased w-full`}
+      className={`border-t-2 border-neutral-900 pt-6 mb-2 antialiased w-full`}
     >
       {/* EN-TÊTE ÉDITORIAL : Titre cliquable + Lien "Voir tout" */}
-      <div className='flex items-end justify-between border-b border-neutral-100 pb-3 mb-6 gap-4'>
-        <Link href={countryUrl} className='group flex items-center gap-2'>
-          <h2
-            className={`font-condensed text-xl md:text-2xl font-black uppercase tracking-tight text-black group-hover transition-colors hover:text-red-600`}
-          >
-            {country.name}
+      <div className='flex items-center justify-between border-b border-gray-100 pb-3 mb-6 gap-4'>
+        <Link href={zone.slug} className='group flex items-center gap-2'>
+          <h2 className='font-condensed text-xl md:text-2xl font-bold uppercase tracking-tight text-black group-hover:text-red-600 transition-colors'>
+            {zone.name}
           </h2>
         </Link>
 
-        {/* Le lien vers la page pays globale */}
+        {/* Lien direct "Voir tout" vers /rubrique/[slug] */}
         <Link
-          href={countryUrl}
-          className={`inline-flex items-center gap-1.5 text-xs font-black uppercase tracking-wider text-neutral-400 transition-colors group font-sans hover:text-red-600`}
+          href={zone.slug}
+          className='hidden text-gray-400 md:inline-flex items-center gap-1.5 text-xs font-black uppercase tracking-wider  hover:text-red-600 transition-colors group'
         >
-          <span>Toutes les infos sur l'{country.name}</span>
+          <span>Voir tout</span>
           <ArrowRight className='w-3.5 h-3.5 group-hover:translate-x-0.5 transition-transform' />
         </Link>
       </div>
-
       {/* LA MOSAÏQUE DES 5 ARTICLES */}
       <div className='grid grid-cols-1 lg:grid-cols-12 gap-8 items-start'>
         {/* NIVEAU 1 : L'article Principal (Prend 7/12 de la largeur) */}
@@ -95,12 +92,12 @@ export default function SectionMosaiquePaysAccueil({
             <div className='space-y-2'>
               <Link href={`/posts/${leadArticle.slug}`}>
                 <h3
-                  className='font-condensed text-xl md:text-2xl font-bold tracking-tight leading-tight text-neutral-900 group-hover:text-red-600 transition-colors mb-4'
+                  className='font-condensed text-lg md:text-2xl font-bold tracking-tight leading-tight text-neutral-900 group-hover:text-red-600 transition-colors mb-4'
                   dangerouslySetInnerHTML={{ __html: leadArticle.title }}
                 />
               </Link>
               <p
-                className='text-gray-600 text-sm font-normal leading-relaxed'
+                className='text-gray-600 md:text-sm  hidden md:block font-normal leading-relaxed'
                 dangerouslySetInnerHTML={{
                   __html: cleanWordPressExcerpt(leadArticle.excerpt),
                 }}

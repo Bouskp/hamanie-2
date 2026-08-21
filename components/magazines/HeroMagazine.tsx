@@ -39,8 +39,7 @@ export default async function HeroMagazine({
               src={imageUrl}
               alt={`Couverture du numéro ${magazine.issueNumber}`}
               fill
-              priority // Force le chargement prioritaire
-              // LA SÉCURITÉ ANTI-COUPURE : contain garantit que l'image s'affiche à 100% dans son cadre A4
+              priority
               className='object-contain'
               sizes='(max-w-768px) 100vw, 33vw'
             />
@@ -49,7 +48,7 @@ export default async function HeroMagazine({
 
         {/* COLONNE DROITE (7/12) : Titre, Sommaire et Boutons de conversion */}
         <div className='lg:col-span-7 space-y-6 text-left'>
-          <div className='flex flex-wrap items-center gap-3'>
+          <div className='flex items-center justify-center md:justify-start gap-3'>
             <span className='bg-red-600 text-white text-[10px] font-condensed font-black uppercase tracking-widest px-3 py-1 rounded-sm'>
               Numérique
             </span>
@@ -58,11 +57,11 @@ export default async function HeroMagazine({
             </span>
           </div>
 
-          <h2 className='font-serif text-3xl md:text-5xl font-black tracking-tight leading-tight text-white'>
+          <h2 className='font-serif text-3xl md:text-5xl font-black tracking-tight leading-tight text-white text-center md:text-left'>
             {magazine.title}
           </h2>
 
-          <p className='text-gray-300 text-sm md:text-base leading-relaxed font-normal font-sans'>
+          <p className='text-gray-300 text-sm md:text-base leading-relaxed font-normal font-sans text-center md:text-left'>
             {magazine.summary}
           </p>
 
@@ -91,7 +90,7 @@ export default async function HeroMagazine({
           )}
 
           {/* Boutons d'Appels à l'action principaux */}
-          <div className='flex flex-col sm:flex-row gap-4 pt-2'>
+          <div className='flex items-center justify-center md:justify-start sm:flex-row gap-4 pt-2'>
             <Link
               href={magazine.linkUrl}
               className='bg-yellow-500 hover:bg-yellow-600 text-gray-950 font-condensed font-black px-6 py-3.5 rounded-lg text-center text-xs tracking-wider uppercase transition-colors shadow-lg shadow-yellow-500/5 cursor-pointer'
