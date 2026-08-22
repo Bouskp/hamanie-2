@@ -12,6 +12,9 @@ import { Badge } from '@/components/ui/badge'
 import { CalendarDays, Folder, Tag, User, Clock, RefreshCw } from 'lucide-react'
 import { calculateReadingTime, formatHtml } from '@/lib/utils'
 import { Metadata } from 'next'
+import parse, { domToReact, HTMLReactParserOptions } from 'html-react-parser'
+import { Element } from 'domhandler'
+import { ReactNode } from 'react'
 
 export const revalidate = 3600
 
@@ -30,8 +33,10 @@ export async function generateMetadata({
   const featuredMedia = post._embedded?.['wp:featuredmedia']?.[0]?.source_url
 
   // Utilisation de vos métadonnées personnalisées issues de WordPress
-  const seoTitle = post.title.rendered
-  const seoDesc = post.excerpt.rendered.replace(/<[^>]*>/g, '').trim()
+  const seoTitle = formatHtml(post.title.rendered)
+  const seoDesc = formatHtml(
+    post.excerpt.rendered.replace(/<[^>]*>/g, '').trim(),
+  )
 
   return {
     title: seoTitle,
@@ -61,6 +66,29 @@ export async function generateStaticParams() {
   return posts.map((p) => ({
     slug: p.slug,
   }))
+}
+
+function renderContent(html: string): ReactNode {
+  const options: HTMLReactParserOptions = {
+    replace: (domNode) => {
+      if (domNode instanceof Element && domNode.name === 'img') {
+        const { src, alt } = domNode.attribs
+
+        return (
+          <span className='relative block w-full aspect-[4/3] md:aspect-video my-6 rounded-xl overflow-hidden'>
+            <Image
+              src={src}
+              alt={alt || ''}
+              fill
+              className='rounded-lg object-cover'
+            />
+          </span>
+        )
+      }
+    },
+  }
+
+  return parse(html, options)
 }
 
 export default async function PostPage({
@@ -134,7 +162,6 @@ export default async function PostPage({
         )}
 
         {/* Métadonnées de l'article */}
-        {/* Métadonnées de l'article */}
         <div className='flex flex-wrap items-center gap-y-2 gap-x-6 text-sm text-muted-foreground pt-2'>
           <div className='flex items-center gap-1.5 font-semibold'>
             <User className='h-4 w-4' />
@@ -176,7 +203,7 @@ export default async function PostPage({
           {/* Image principale uniquement */}
           <div className='space-y-2'>
             {featuredMedia && (
-              <div className='relative w-full aspect-video md:aspect-[16/9] rounded-2xl overflow-hidden border bg-muted shadow-xs'>
+              <div className='relative w-full aspect-[4/3] md:aspect-[16/9] rounded-2xl overflow-hidden border bg-muted shadow-xs'>
                 <Image
                   src={featuredMedia}
                   alt={formatHtml(post.title?.rendered || "Image de l'article")}
@@ -225,14 +252,11 @@ export default async function PostPage({
       {/* CORPS DE L'ARTICLE + BARRE LATÉRALE */}
       <div className='grid grid-cols-1 lg:grid-cols-3 gap-12 items-start pt-4'>
         <div className='lg:col-span-2'>
-          <div
-            className='prose prose-base max-w-none prose-p:mt-0 prose-p:mb-4 prose-headings:mt-6 prose-headings:mb-3 prose-headings:font-serif prose-justify prose-p:text-black dark:prose-p:text-gray-100 prose-headings:text-black dark:prose-headings:text-white prose-strong:text-black dark:prose-strong:text-white'
-            dangerouslySetInnerHTML={{
-              __html: formatHtml(
-                post.content?.rendered.replaceAll('Thom Biakpa', '') || '',
-              ),
-            }}
-          />
+          <div className='prose prose-base max-w-none prose-p:mt-0 prose-p:mb-4 prose-headings:mt-6 prose-headings:mb-3 prose-headings:font-serif prose-justify prose-p:text-black dark:prose-p:text-gray-100 prose-headings:text-black dark:prose-headings:text-white prose-strong:text-black dark:prose-strong:text-white'>
+            {renderContent(
+              post.content?.rendered.replaceAll('Thom Biakpa', '') || '',
+            )}
+          </div>
         </div>
 
         <aside className='space-y-8 lg:sticky lg:top-[100px] h-fit'>

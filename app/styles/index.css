@@ -157,3 +157,40 @@ body {
     transform: translateX(-33.33%);
   }
 }
+
+.prose figure {
+  width: auto !important;
+  max-width: 100% !important;
+}
+
+.prose figure a {
+  display: block;
+  width: 100%;
+}
+
+.prose figcaption {
+  font-size: 0.75rem;
+  color: var(--muted-foreground);
+  font-style: italic;
+  text-align: left;
+  max-width: 56rem; /* équivalent max-w-4xl */
+  padding-left: 0.25rem;
+  padding-right: 0.25rem;
+  line-height: 1.625;
+  font-family: var(--font-condensed), sans-serif;
+}
+
+.prose figcaption p {
+  margin: 0;
+}
+
+.prose figcaption strong {
+  color: var(--foreground);
+  font-weight: 700;
+}
+
+@media (min-width: 768px) {
+  .prose figcaption {
+    font-size: 0.875rem;
+  }
+}
