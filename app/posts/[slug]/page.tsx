@@ -16,8 +16,6 @@ import parse, { domToReact, HTMLReactParserOptions } from 'html-react-parser'
 import { Element } from 'domhandler'
 import { ReactNode } from 'react'
 
-export const revalidate = 3600
-
 export const dynamicParams = true
 
 export async function generateMetadata({
