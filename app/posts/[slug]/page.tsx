@@ -73,6 +73,10 @@ function renderContent(html: string): ReactNode {
     replace: (domNode) => {
       if (domNode instanceof Element && domNode.name === 'img') {
         const { src, alt } = domNode.attribs
+        const focalX = domNode.attribs['data-focal-point-x']
+        const focalY = domNode.attribs['data-focal-point-y']
+        const objectPosition =
+          focalX && focalY ? `${focalX}% ${focalY}%` : '50% 50%'
 
         return (
           <span className='relative block w-full aspect-[4/3] md:aspect-video my-6 rounded-xl overflow-hidden'>
@@ -81,6 +85,7 @@ function renderContent(html: string): ReactNode {
               alt={alt || ''}
               fill
               className='rounded-lg object-cover'
+              style={{ objectPosition }}
             />
           </span>
         )
@@ -209,7 +214,6 @@ export default async function PostPage({
                   alt={formatHtml(post.title?.rendered || "Image de l'article")}
                   fill
                   priority
-                  quality={85}
                   sizes='(max-width: 1024px) 100vw, 75vw'
                   className='object-cover'
                   style={{
