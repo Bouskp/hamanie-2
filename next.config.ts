@@ -24,7 +24,7 @@ const nextConfig: NextConfig = {
       // Catch-all pour les anciens liens d'articles (doit rester APRÈS les règles spécifiques)
       {
         source:
-          '/:slug((?!posts|abonnement|api|favicon.ico|wp-admin|wp-login.php|wp-json|about|contact|rubrique|zones|magazine|_next).*)',
+          '/:slug((?!posts|abonnement|api|favicon.ico|wp-admin|wp-login.php|wp-json|about|contact|rubrique|zones|magazine|_next)[^/]+)',
         destination: '/posts/:slug',
         permanent: true,
       },
