@@ -5,6 +5,7 @@ import { SpeedInsights } from '@vercel/speed-insights/next'
 import { Analytics } from '@vercel/analytics/next'
 import { Footer } from '@/components/footer'
 import StockTicker from '@/components/StockTicker'
+import { GoogleAnalytics } from '@next/third-parties/google'
 
 // 1. Police Sans-Serif pour le texte général et l'interface
 const fontSans = Inter({
@@ -48,6 +49,9 @@ export default function RootLayout({
         <SpeedInsights />
         <Analytics />
       </body>
+      {process.env.NEXT_PUBLIC_GA_ID && (
+        <GoogleAnalytics gaId={process.env.NEXT_PUBLIC_GA_ID} />
+      )}
     </html>
   )
 }
