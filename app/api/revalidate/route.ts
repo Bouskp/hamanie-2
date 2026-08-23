@@ -1,45 +1,30 @@
-import { NextRequest, NextResponse } from 'next/server'
 import { revalidateTag } from 'next/cache'
-import crypto from 'crypto'
+import { NextRequest, NextResponse } from 'next/server'
 
-function isValidSecret(
-  provided: string | null,
-  expected: string | undefined,
-): boolean {
-  if (!provided || !expected) return false
+export async function POST(req: NextRequest) {
+  let body: { secret?: string; slug?: string }
 
-  const a = Buffer.from(provided)
-  const b = Buffer.from(expected)
-
-  if (a.length !== b.length) return false
-
-  return crypto.timingSafeEqual(a, b)
-}
-
-export async function POST(request: NextRequest) {
   try {
-    const { searchParams } = new URL(request.url)
-    const secret = searchParams.get('secret')
-    const slug = searchParams.get('slug')
-
-    if (!isValidSecret(secret, process.env.MY_SECRET_REVALIDATE_TOKEN)) {
-      return NextResponse.json({ message: 'Token invalide' }, { status: 401 })
-    }
-
-    if (!slug) {
-      return NextResponse.json({ message: 'Slug manquant' }, { status: 400 })
-    }
-
-    revalidateTag(`post-${slug}`, 'max')
-    revalidateTag('posts', 'max')
-    revalidateTag('wordpress', 'max')
-
-    return NextResponse.json({ revalidated: true, now: Date.now() })
-  } catch (err) {
-    console.error('Revalidation error:', err)
+    body = await req.json()
+  } catch {
     return NextResponse.json(
-      { message: 'Erreur lors de la revalidation' },
-      { status: 500 },
+      { message: 'Corps de requête invalide' },
+      { status: 400 },
     )
   }
+
+  const { secret, slug } = body
+
+  if (secret !== process.env.WORDPRESS_WEBHOOK_SECRET) {
+    return NextResponse.json({ message: 'Secret invalide' }, { status: 401 })
+  }
+
+  if (!slug) {
+    return NextResponse.json({ message: 'Slug manquant' }, { status: 400 })
+  }
+
+  revalidateTag(`post-${slug}`, 'max')
+  revalidateTag('posts', 'max')
+
+  return NextResponse.json({ revalidated: true, slug })
 }
