@@ -145,12 +145,13 @@ export function ForbesLayout({
                   className='flex flex-col sm:flex-row gap-6'
                 >
                   {post.image && (
-                    <div className='w-full aspect-[1/1] md:aspect-[3/4] shrink-0 relative overflow-hidden rounded-md bg-neutral-50 border border-neutral-100'>
+                    <div className='w-full sm:w-48 md:w-56 aspect-[1/1] md:aspect-[3/4] shrink-0 relative overflow-hidden rounded-md bg-neutral-50 border border-neutral-100'>
                       <Image
                         src={post.image}
                         alt=''
                         className='object-cover'
                         fill
+                        sizes='(max-width: 640px) 100vw, 224px'
                       />
                     </div>
                   )}
