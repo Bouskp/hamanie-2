@@ -187,7 +187,7 @@ export default async function PostPage({
               <span>
                 Mis à jour le{' '}
                 {new Date(post.modified).toLocaleDateString('fr-FR', {
-                  dateStyle: 'short',
+                  dateStyle: 'long',
                 })}
               </span>
             </div>
