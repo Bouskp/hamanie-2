@@ -5,6 +5,7 @@ const wordpressUrl = process.env.WORDPRESS_URL
 
 const nextConfig: NextConfig = {
   images: {
+    minimumCacheTTL: 31622400,
     remotePatterns: [
       {
         protocol: 'https',
