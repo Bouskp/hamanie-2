@@ -14,6 +14,7 @@ export async function POST(req: NextRequest) {
   }
 
   const { secret, slug } = body
+  console.log('Revalidation reçue pour:', body.slug)
 
   if (secret !== process.env.WORDPRESS_WEBHOOK_SECRET) {
     return NextResponse.json({ message: 'Secret invalide' }, { status: 401 })
@@ -27,5 +28,5 @@ export async function POST(req: NextRequest) {
   revalidateTag('posts', 'max')
   revalidateTag(`posts-${slug}`, 'max')
 
-  return NextResponse.json({ revalidated: true, slug })
+  return NextResponse.json({ revalidated: true, slug: body.slug })
 }
