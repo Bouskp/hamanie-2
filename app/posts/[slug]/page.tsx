@@ -70,7 +70,26 @@ function renderContent(html: string): ReactNode {
   const options: HTMLReactParserOptions = {
     replace: (domNode) => {
       if (domNode instanceof Element && domNode.name === 'img') {
-        const { src, alt } = domNode.attribs
+        const { src, alt, class: className } = domNode.attribs
+        const isChart = className?.includes('wp-chart-image')
+
+        if (isChart) {
+          // Graphique/tableau : pas de recadrage, ratio naturel préservé
+          return (
+            <span className='relative block w-full my-6 rounded-xl overflow-hidden bg-white'>
+              <Image
+                src={src}
+                alt={alt || ''}
+                width={0}
+                height={0}
+                sizes='100vw'
+                style={{ width: '100%', height: 'auto' }}
+                className='rounded-lg'
+              />
+            </span>
+          )
+        }
+
         const focalX = domNode.attribs['data-focal-point-x']
         const focalY = domNode.attribs['data-focal-point-y']
         const objectPosition =

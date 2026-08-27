@@ -1,4 +1,4 @@
-import { revalidateTag } from 'next/cache'
+import { revalidatePath, revalidateTag } from 'next/cache'
 import { NextRequest, NextResponse } from 'next/server'
 
 export async function POST(req: NextRequest) {
@@ -23,8 +23,9 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ message: 'Slug manquant' }, { status: 400 })
   }
 
-  revalidateTag(`post-${slug}`, 'max')
+  revalidatePath(`/posts/${slug}`)
   revalidateTag('posts', 'max')
+  revalidateTag(`posts-${slug}`, 'max')
 
   return NextResponse.json({ revalidated: true, slug })
 }
