@@ -90,7 +90,7 @@ export default async function MagPage({ searchParams }: Props) {
             </h2>
 
             <span className='text-xs font-bold tracking-widest text-red-600 uppercase'>
-              Dernier numéro en kiosque
+              Dernier numéro en ligne
             </span>
             <h2 className='text-2xl text-center md:text-left font-bold md:text-4xl'>
               {`Hamaniè #${latestMag?.acf?.numero_magazine}`}
