@@ -2,8 +2,8 @@
 
 import { useEffect, useState } from 'react'
 import Link from 'next/link'
-import bannerDesktop from '@/app/images/banniere_hamanie.png'
-import bannerMobile from '@/app/images/banniere_hamanie_mobile.png'
+import bannerDesktop from '@/app/images/bannere.png'
+import bannerMobile from '@/app/images/Banniere_Mobile.png'
 
 type AdBannerProps = {
   href?: string
