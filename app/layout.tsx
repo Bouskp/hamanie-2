@@ -46,7 +46,6 @@ export default function RootLayout({
       <body>
         <StockTicker />
         <Navbar />
-        <AdBanner href='http://urlr.me/vuQH5N' />
         <main>{children}</main>
         <Footer />
         <NewMagazinePopup />
