@@ -46,7 +46,7 @@ export const metadata: Metadata = {
 // 2. LE COMPOSANT DE LA PAGE PRINCIPALE
 export default async function HomePage() {
   // Récupération de tous les flux WordPress en parallèle pour des performances maximales
-  const response = await getPostsPaginated(1, 3)
+  const response = await getPostsPaginated(1, 5)
   const { data: recentPost } = response
 
   const responseMag = await getMagazinePaginated(1, 1)

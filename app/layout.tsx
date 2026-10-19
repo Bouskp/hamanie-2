@@ -7,7 +7,6 @@ import { Footer } from '@/components/footer'
 import StockTicker from '@/components/StockTicker'
 import { GoogleAnalytics } from '@next/third-parties/google'
 import { NewMagazinePopup } from '@/components/NewMagazinePopup'
-import { AdBanner } from '@/components/AdBanner'
 
 // 1. Police Sans-Serif pour le texte général et l'interface
 const fontSans = Inter({
