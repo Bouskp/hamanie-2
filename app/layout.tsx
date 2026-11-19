@@ -38,11 +38,7 @@ export default function RootLayout({
       className={`${fontSans.variable} ${fontSerif.variable} ${fontCondensed.variable}`}
     >
       <head>
-        <meta
-          name='google-site-verification'
-          content='VMWh9RRFplrKvXCLnbQr6juOaWloanMl3goKBhZTdUE'
-        />
-        <title>Hamaniè-site d'infos</title>
+        <title>Hamaniè.news site d'infos</title>
       </head>
 
       <body>
