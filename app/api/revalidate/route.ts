@@ -25,6 +25,7 @@ export async function POST(req: NextRequest) {
   }
 
   revalidatePath(`/posts/${slug}`)
+  revalidateTag('wordpress', 'max')
   revalidateTag('posts', 'max')
   revalidateTag(`posts-${slug}`, 'max')
 

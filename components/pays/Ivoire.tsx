@@ -15,7 +15,7 @@ interface Post {
   image?: string
   date: string
   altStr?: string
-  focalPoint: {
+  focalPoint?: {
     x: string
     y: string
   }
@@ -27,6 +27,27 @@ interface LayoutProps {
   currentPage: number
   totalPages: number
   slug: string
+}
+
+// Nettoie un titre WordPress pour l'utiliser dans un attribut alt
+function toPlainText(html: string): string {
+  return html
+    .replace(/<[^>]*>/g, '')
+    .replace(/&#038;|&amp;/g, '&')
+    .replace(/&#8217;|&rsquo;/g, '’')
+    .replace(/&#8216;|&lsquo;/g, '‘')
+    .replace(/&#8220;|&ldquo;/g, '“')
+    .replace(/&#8221;|&rdquo;/g, '”')
+    .replace(/&#8211;|&ndash;/g, '–')
+    .replace(/&#8212;|&mdash;/g, '—')
+    .replace(/&#8230;|&hellip;/g, '…')
+    .replace(/&quot;/g, '"')
+    .replace(/&#039;|&apos;/g, "'")
+    .replace(/&nbsp;/g, ' ')
+}
+
+function getObjectPosition(focalPoint?: Post['focalPoint']): string {
+  return focalPoint ? `${focalPoint.x} ${focalPoint.y}` : '50% 50%'
 }
 
 export function CoteDivoireLayout({
@@ -41,12 +62,12 @@ export function CoteDivoireLayout({
   const feedArticles = articles.slice(5)
 
   return (
-    <div className='space-y-12 w-full'>
+    <div className='space-y-12 w-full w-full max-w-7xl mx-auto px-4 lg:px-6'>
       <header className='w-full bg-white border-b border-gray-200'>
-        <div className='max-w-7xl mx-auto pb-3 border-b-4 border-black flex justify-between items-end gap-4'>
+        <div className='pb-3 border-b-4 border-black flex justify-between items-end gap-4'>
           <div>
             <h1
-              className='text-2xl md:text-4xl font-black font-serif tracking-tight text-gray-900 capitalize'
+              className='text-2xl md:text-4xl font-black font-serif tracking-tight text-gray-900 break-words'
               dangerouslySetInnerHTML={{ __html: title }}
             />
           </div>
@@ -65,14 +86,12 @@ export function CoteDivoireLayout({
                 >
                   <Image
                     src={leadArticle.image}
-                    alt={leadArticle.title}
+                    alt={toPlainText(leadArticle.title)}
                     fill
                     priority
                     className='object-cover'
                     style={{
-                      objectPosition: leadArticle.focalPoint
-                        ? `${leadArticle.focalPoint.x} ${leadArticle.focalPoint.y}`
-                        : '50% 50%',
+                      objectPosition: getObjectPosition(leadArticle.focalPoint),
                     }}
                     sizes='(max-width: 1024px) 100vw, 66vw'
                   />
@@ -80,12 +99,9 @@ export function CoteDivoireLayout({
               </Link>
             )}
             <div className='space-y-2'>
-              <span className='text-[10px] font-black text-orange-600 uppercase tracking-widest block font-sans'>
-                Grand Angle
-              </span>
               <Link href={`/posts/${leadArticle.slug}`}>
                 <h2
-                  className='font-serif text-2xl md:text-4xl font-extrabold tracking-tight leading-tight group-hover:text-orange-600 transition-colors'
+                  className='font-serif text-2xl md:text-4xl font-extrabold tracking-tight leading-tight group-hover:text-red-600 transition-colors'
                   dangerouslySetInnerHTML={{ __html: leadArticle.title }}
                 />
               </Link>
@@ -104,9 +120,9 @@ export function CoteDivoireLayout({
         <aside className='lg:col-span-4 bg-white p-5 border border-gray-200/80 rounded-xl space-y-4 lg:sticky lg:top-24'>
           <div className='flex items-center gap-1.5 border-b border-gray-100 pb-2'>
             <Zap className='w-4 h-4 text-red-500 fill-red-500' />
-            <h3 className='font-sans text-xs font-black uppercase tracking-wider text-gray-400'>
+            <h2 className='font-sans text-xs font-black uppercase tracking-wider text-gray-400'>
               Les plus lus
-            </h3>
+            </h2>
           </div>
           <div className='space-y-4 divide-y divide-gray-100'>
             {popularArticles.map((post, idx) => (
@@ -115,7 +131,7 @@ export function CoteDivoireLayout({
                 className={`group space-y-1 ${idx > 0 ? 'pt-4' : ''}`}
               >
                 <Link href={`/posts/${post.slug}`} className='block space-y-1'>
-                  <h4
+                  <h3
                     className='font-serif font-bold text-sm text-gray-800 group-hover:text-red-500 transition-colors leading-snug line-clamp-2'
                     dangerouslySetInnerHTML={{ __html: post.title }}
                   />
@@ -128,15 +144,15 @@ export function CoteDivoireLayout({
 
       <Separator className='bg-gray-200' />
 
-      {/* ZONE 2 : Économie */}
+      {/* ZONE 2 : Économie (à implémenter) */}
 
-      {/* ZONE 3 : Politique */}
+      {/* ZONE 3 : Politique (à implémenter) */}
 
       {/* ZONE 4 : Flux continu */}
       <section className='space-y-6 border-t border-gray-100 pt-10'>
-        <h4 className='font-condensed text-xs font-black uppercase tracking-wider text-gray-400 border-b border-gray-200 pb-2 font-sans'>
+        <h2 className='text-xs font-black uppercase tracking-wider text-gray-400 border-b border-gray-200 pb-2 font-sans'>
           Toutes les actualités
-        </h4>
+        </h2>
         <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6'>
           {feedArticles.slice(0, 9).map((post) => (
             <div
@@ -151,13 +167,11 @@ export function CoteDivoireLayout({
                   >
                     <Image
                       src={post.image}
-                      alt={post.title}
+                      alt={toPlainText(post.title)}
                       fill
                       className='object-cover'
                       style={{
-                        objectPosition: leadArticle.focalPoint
-                          ? `${leadArticle.focalPoint.x} ${leadArticle.focalPoint.y}`
-                          : '50% 50%',
+                        objectPosition: getObjectPosition(post.focalPoint),
                       }}
                       sizes='(max-width: 768px) 100vw, 33vw'
                     />
@@ -165,7 +179,7 @@ export function CoteDivoireLayout({
                 </Link>
               )}
               <Link href={`/posts/${post.slug}`}>
-                <h4
+                <h3
                   className='font-sans font-bold text-sm hover:text-red-500 transition-colors leading-snug line-clamp-2'
                   dangerouslySetInnerHTML={{ __html: post.title }}
                 />
@@ -182,7 +196,7 @@ export function CoteDivoireLayout({
         <CustomPagination
           currentPage={currentPage}
           totalPages={totalPages}
-          basePath={`/pays/${slug}`}
+          basePath={`/pays/${encodeURIComponent(slug)}`}
         />
       </div>
     </div>

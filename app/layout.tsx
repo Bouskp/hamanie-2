@@ -6,7 +6,6 @@ import { Analytics } from '@vercel/analytics/next'
 import { Footer } from '@/components/footer'
 import StockTicker from '@/components/StockTicker'
 import { GoogleAnalytics } from '@next/third-parties/google'
-import { NewMagazinePopup } from '@/components/NewMagazinePopup'
 
 // 1. Police Sans-Serif pour le texte général et l'interface
 const fontSans = Inter({
@@ -39,6 +38,10 @@ export default function RootLayout({
       className={`${fontSans.variable} ${fontSerif.variable} ${fontCondensed.variable}`}
     >
       <head>
+        <meta
+          name='google-site-verification'
+          content='VMWh9RRFplrKvXCLnbQr6juOaWloanMl3goKBhZTdUE'
+        />
         <title>Hamaniè-site d'infos</title>
       </head>
 
@@ -47,7 +50,6 @@ export default function RootLayout({
         <Navbar />
         <main>{children}</main>
         <Footer />
-        <NewMagazinePopup />
         <SpeedInsights />
         <Analytics />
       </body>

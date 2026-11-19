@@ -39,7 +39,6 @@ export default function SectionMosaiquePaysAccueil({
   const gridArticles = articles.slice(1, 5) // Les 4 articles secondaires à droite
 
   const countryUrl = `/zones/${zone.slug}`
-  // Petite astuce pour n'extraire QUE la classe de texte (ex: text-orange-600) ou de bordure
 
   return (
     <section
@@ -47,7 +46,7 @@ export default function SectionMosaiquePaysAccueil({
     >
       {/* EN-TÊTE ÉDITORIAL : Titre cliquable + Lien "Voir tout" */}
       <div className='flex items-center justify-between border-b border-gray-100 pb-3 mb-6 gap-4'>
-        <Link href={zone.slug} className='group flex items-center gap-2'>
+        <Link href={countryUrl} className='group flex items-center gap-2'>
           <h2 className='font-condensed text-xl md:text-2xl font-bold uppercase tracking-tight text-black group-hover:text-red-600 transition-colors'>
             {zone.name}
           </h2>
@@ -55,7 +54,7 @@ export default function SectionMosaiquePaysAccueil({
 
         {/* Lien direct "Voir tout" vers /rubrique/[slug] */}
         <Link
-          href={zone.slug}
+          href={countryUrl}
           className='hidden text-gray-400 md:inline-flex items-center gap-1.5 text-xs font-black uppercase tracking-wider  hover:text-red-600 transition-colors group'
         >
           <span>Voir tout</span>

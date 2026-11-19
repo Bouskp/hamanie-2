@@ -2,7 +2,6 @@
 import { Metadata } from 'next'
 import { notFound } from 'next/navigation'
 import GrilleActualitesPays from '@/components/pays/GrilleActualitePays'
-import { CustomPagination } from '@/components/rubriques/CustomPagination'
 import { formatHtml, formatMediaDate, zones } from '@/lib/utils'
 import { getPostsByZonePaginated, getPostsPaginated } from '@/lib/wordpress'
 import { RdcLayout } from '@/components/pays/Congo'

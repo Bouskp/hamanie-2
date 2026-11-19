@@ -116,14 +116,8 @@ export function cleanWordPressExcerpt(excerpt: string): string {
 }
 
 export const groupeSites = [
-  { label: 'Sakafo', href: 'https://sakafo.cooking/' },
-  {
-    label: 'Libula',
-    href: 'https://libula.media/',
-  },
-  { label: 'Almasi', href: 'https://almasi.fashion/' },
   { label: 'MianMedia', href: 'https://mianmedia.com/' },
-  { label: 'Sante360', href: '' },
+  { label: 'Miansports', href: 'https://miansports.com' },
 ]
 
 export const footerLinks = [

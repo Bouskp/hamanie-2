@@ -16,6 +16,10 @@ interface Post {
   image?: string
   subCategory?: string
   content: string
+  focalPoint: {
+    x: string
+    y: string
+  }
 }
 
 export function ForbesLayout({
@@ -63,6 +67,11 @@ export function ForbesLayout({
                     src={mainFeature.image}
                     alt={mainFeature.title}
                     className='object-cover w-full h-full group-hover:opacity-90 transition-opacity'
+                    style={{
+                      objectPosition: mainFeature.focalPoint
+                        ? `${mainFeature.focalPoint.x} ${mainFeature.focalPoint.y}`
+                        : '50% 50%',
+                    }}
                   />
                 </AspectRatio>
               )}
@@ -108,6 +117,11 @@ export function ForbesLayout({
                     src={post.image}
                     alt=''
                     className='object-cover w-full h-full'
+                    style={{
+                      objectPosition: mainFeature.focalPoint
+                        ? `${mainFeature.focalPoint.x} ${mainFeature.focalPoint.y}`
+                        : '50% 50%',
+                    }}
                   />
                 </AspectRatio>
               )}
@@ -119,14 +133,6 @@ export function ForbesLayout({
                 }}
               />
             </Link>
-            <div className='pt-2 border-t border-neutral-100 text-[11px]'>
-              <span className='font-semibold text-neutral-800'>
-                Par{' '}
-                {post.content.includes('Thom Biakpa')
-                  ? 'Thomas Biakpa'
-                  : 'La Rédaction'}
-              </span>
-            </div>
           </article>
         ))}
       </div>
@@ -152,6 +158,11 @@ export function ForbesLayout({
                         className='object-cover'
                         fill
                         sizes='(max-width: 640px) 100vw, 224px'
+                        style={{
+                          objectPosition: post.focalPoint
+                            ? `${post.focalPoint.x} ${post.focalPoint.y}`
+                            : '50% 50%',
+                        }}
                       />
                     </div>
                   )}
